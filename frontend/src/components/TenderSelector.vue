@@ -1,9 +1,5 @@
 <template>
-  <b-jumbotron
-    header="Select a Tender"
-    header-level="4"
-    lead="Filter the tenders with the selectors below"
-  >
+  <div>
     <b-form inline>
       <b-form-datepicker v-model="date"></b-form-datepicker>
       <b-form-select v-model="market" :options="markets"></b-form-select>
@@ -15,7 +11,7 @@
         Tender - {{ tender.date }} {{ tender.market }} {{ tender.direction}}-{{ tender.tender_round }}
       </b-list-group-item>
     </b-list-group>
-  </b-jumbotron>
+  </div>
 </template>
 
 <script>
@@ -28,17 +24,17 @@ export default {
       direction: null,
       tender_round: null,
       markets: [
-        { value: null, text: "Filter market" },
+        { value: null, text: "Market" },
         { value: "aFRR", text: "aFRR" },
         { value: "mFRR", text: "mFRR" }
       ],
       directions: [
-        { value: null, text: "Filter direction" },
+        { value: null, text: "Direction" },
         { value: "U", text: "Up" },
         { value: "D", text: "Down" }
       ],
       rounds: [
-        { value: null, text: "Filter round" },
+        { value: null, text: "Round" },
         { value: 1, text: "1" },
         { value: 2, text: "2" }
       ]
@@ -46,7 +42,7 @@ export default {
   },
   methods: {
     getTenders() {
-      fetch("http://127.0.0.1:8000/api/tenders", {
+      fetch("http://127.0.0.1:8000/api/tenders/", {
         method: "get"
       })
       .then((response) => {

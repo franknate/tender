@@ -4,21 +4,27 @@
     <b-container class="bv-example-row">
       <b-row>
         <b-col>
-          <TabsBox />
+          <CenterBox />
         </b-col>
       </b-row>
     </b-container>
+    <LeftSidebar />    
+    <RightSidebar />
   </div>
 </template>
 
 <script>
 import AppHeader from "./components/AppHeader.vue";
-import TabsBox from "./components/TabsBox.vue";
+import CenterBox from "./components/CenterBox.vue";
+import LeftSidebar from "./components/LeftSidebar.vue";
+import RightSidebar from "./components/RightSidebar.vue";
 
 export default {
   components: {
     AppHeader,
-    TabsBox
+    CenterBox,
+    LeftSidebar,
+    RightSidebar
   }
 };
 </script>
