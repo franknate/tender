@@ -6,8 +6,9 @@ from rest_framework.response import Response
 
 
 class TenderViewSet(viewsets.ModelViewSet):
-    queryset = Tender.objects.all()
+    queryset = Tender.objects.all().order_by('-date')
     serializer_class = TenderSerializer
+    ordering = ['date']
 
     def list(self, request):
         queryset = Tender.objects.all()

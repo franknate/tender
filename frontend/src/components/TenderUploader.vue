@@ -2,20 +2,34 @@
   <div>
     <b-form
       id="upload-form"
-      @submit.prevent="uploadForm"
+      @submit.stop.prevent="uploadForm"
     >
-      <b-form-file
-        v-model="tenderFile"
-        placeholder="Choose a file..."
-        drop-placeholder="Drop file here..."
-        accept=".xlsx"
-        :state="checkFile"
-        required
-      ></b-form-file>
-      <b-form-select v-model="market" :options="markets" required></b-form-select>
-      <b-form-select v-model="direction" :options="directions" required></b-form-select>
-      <b-form-select v-model="tender_round" :options="tender_rounds" required></b-form-select>
-      <b-button type="submit" variant="primary">Upload</b-button>
+      <b-form-group>
+        <b-form-file
+          v-model="tenderFile"
+          placeholder="Choose a file..."
+          drop-placeholder="Drop file here..."
+          accept=".xlsx"
+          :state="checkFile"
+          required
+        ></b-form-file>
+        <b-form-invalid-feedback :state="checkFile">
+          Must be an XLSX file
+        </b-form-invalid-feedback>
+      </b-form-group>
+      <b-form-group>
+        <b-form-select v-model="market" :options="markets" required></b-form-select>
+      </b-form-group>
+      <b-form-group>
+        <b-form-select v-model="direction" :options="directions" required></b-form-select>
+      </b-form-group>
+      <b-form-group>
+        <b-form-select v-model="tender_round" :options="tender_rounds" required></b-form-select>
+      </b-form-group>
+      <b-form-group>
+        <b-button type="submit" variant="primary">Upload</b-button>
+      </b-form-group>
+        
     </b-form>
   </div>
 </template>
@@ -25,6 +39,7 @@ export default {
   data() {
     return {
       tenderFile: null,
+      fileError: "",
       market: null,
       direction: null,
       tender_round: null,

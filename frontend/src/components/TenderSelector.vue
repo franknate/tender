@@ -5,10 +5,12 @@
       <b-form-select v-model="market" :options="markets"></b-form-select>
       <b-form-select v-model="direction" :options="directions"></b-form-select>
       <b-form-select v-model="tender_round" :options="rounds"></b-form-select>
+      <b-icon @click="clearFilters" icon="arrow-repeat" class="mx-2" id="clear-icon"></b-icon>
     </b-form>
     <b-list-group>
-      <b-list-group-item v-for="tender in filteredTenders" :key="tender.id">
-        Tender - {{ tender.date }} {{ tender.market }} {{ tender.direction}}-{{ tender.tender_round }}
+      <b-list-group-item v-for="tender in filteredTenders" :key="tender.id" class="text-monospace">
+        Tender {{ tender.date }} {{ tender.market }}
+        <b-icon :icon="tender.arrowIcon" :variant="tender.arrowColor"></b-icon>{{ tender.tender_round }}
       </b-list-group-item>
     </b-list-group>
   </div>
@@ -50,7 +52,20 @@ export default {
       })
       .then((jsonData) => {
         this.tenders = jsonData
+        this.addArrowIcons()
       })
+    },
+    clearFilters() {
+      this.date = null,
+      this.market = null,
+      this.direction = null,
+      this.tender_round = null
+    },
+    addArrowIcons() {
+      for (var tender of this.tenders) {
+        tender.arrowIcon = tender.direction == "U" ? "caret-up-fill" : "caret-down-fill";
+        tender.arrowColor = tender.direction == "U" ? "success" : "danger";
+      }
     }
   },
   computed: {
@@ -60,7 +75,7 @@ export default {
         (this.market == null || this.market == tender.market) &&
         (this.direction == null || this.direction == tender.direction) &&
         (this.tender_round == null || this.tender_round == tender.tender_round)
-      )
+      ).slice(0,8)
     }
   },
   created() {
@@ -77,6 +92,15 @@ export default {
 
 .list-group-item {
   margin-bottom: 2px;
+}
+
+#clear-icon {
+  color: grey;
+}
+
+#clear-icon:hover {
+  color: darkslategrey;
+  cursor: pointer;
 }
 
 </style>

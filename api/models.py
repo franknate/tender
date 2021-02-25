@@ -19,6 +19,9 @@ class Tender(models.Model):
     def __str__(self):
         return 'Tender %s %s-%s-%d' % (str(self.date), self.market, self.direction, self.tender_round, )
 
+    class Meta:
+        ordering = ['-date']
+
 class Unit(models.Model):
     fromdate = models.DateField()
     todate = models.DateField()
