@@ -1,0 +1,9 @@
+body {
+    padding-top: 80px;
+    padding-bottom: 5%;
+}
+
+[v-cloak] {
+    visibility: hidden;
+}
+

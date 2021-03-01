@@ -1,13 +1,7 @@
 <template>
   <div id="app">
     <AppHeader />
-    <b-container class="bv-example-row">
-      <b-row>
-        <b-col>
-          <CenterBox />
-        </b-col>
-      </b-row>
-    </b-container>
+    <CenterBox />
     <LeftSidebar />    
     <RightSidebar />
   </div>

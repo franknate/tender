@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}- Upload{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h2>Upload</h2>
+    </div>
+  </div>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row-sm">
+      <label for="file" class="formlabel">File</label>
+      <input type="file" class="form-control" id="file" name="file" required><br>
+    </div>
+    <div class="row-sm">
+      <label for="market" class="formlabel">Market</label>
+      <select class="form-select" id="market" name="market" required>
+        <option value="aFRR">aFRR</option>
+        <option value="mFRR">mFRR</option>
+      </select><br>
+    </div>
+    <div class="row-sm">
+      <label for="direction" class="formlabel">Direction</label>
+      <select class="form-select" id="direction" name="direction" required>
+        <option value="U">Up</option>
+        <option value="D">Down</option>
+      </select><br>
+    </div>
+    <div class="row-sm">
+      <label for="tender_round" class="formlabel">Tender round</label>
+      <input type="number" class="form-control" id="tender_round" name="tender_round" min=1 max=2 required><br>
+    </div>
+    <div class="row-sm">
+      <label for="bid_round" class="formlabel">Bid round</label>
+      <input type="number" class="form-control" id="bid_round" name="bid_round" min=1 max=10 required><br>
+    </div>
+    <div class="row-sm">
+      <button type="submit" class="btn btn-primary">Upload</button>
+      <label>{{ message }}</label>
+    </div>
+  </form>
+</div>
+
+{% endblock content %}

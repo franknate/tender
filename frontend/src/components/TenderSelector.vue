@@ -7,8 +7,14 @@
       <b-form-select v-model="tender_round" :options="rounds"></b-form-select>
       <b-icon @click="clearFilters" icon="arrow-repeat" class="mx-2" id="clear-icon"></b-icon>
     </b-form>
-    <b-list-group>
-      <b-list-group-item v-for="tender in filteredTenders" :key="tender.id" class="text-monospace">
+    <b-list-group v-if="tenders">
+      <b-list-group-item
+        button
+        v-for="tender in filteredTenders"
+        :key="tender.id"
+        @click="switchTender(tender.id)"
+        class="text-monospace"
+      >
         Tender {{ tender.date }} {{ tender.market }}
         <b-icon :icon="tender.arrowIcon" :variant="tender.arrowColor"></b-icon>{{ tender.tender_round }}
       </b-list-group-item>
@@ -54,6 +60,9 @@ export default {
         this.tenders = jsonData
         this.addArrowIcons()
       })
+    },
+    switchTender(tenderID) {
+      this.$store.commit("switchTender", tenderID)
     },
     clearFilters() {
       this.date = null,

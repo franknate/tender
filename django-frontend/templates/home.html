@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}- Home{% endblock %}
+
+{% block content %}
+  <div class="container mb-5">
+    <div class="row">
+      <h3>Hi {{ user.username }}!</h3>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row bg-light border text-center">
+      <div class="col-md">
+        <div class="row">
+          <h2>Choose an existing tender</h2>
+            <div id="tender-selector">
+              <input v-model="date" @input="checkMatch" type="date">
+              <select v-model="market" @change="checkMatch">
+                <option disabled value="">Market</option>
+                <option>aFRR</option>
+                <option>mFRR</option>
+              </select>
+              <select v-model="direction" @change="checkMatch">
+                <option disabled value="">Direction</option>
+                <option value="U">Up</option>
+                <option value="D">Down</option>
+              </select>
+              <input v-model.numer="tender_round" type="number" @input="checkMatch">
+              <button @click="buttonClicked" :disabled="noMatch" class="btn btn-primary">Go to Tender</button>
+              <p>[[ date + ' ' + market + ' ' + direction + ' ' + tender_round ]]</p>
+            </div>
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="row">
+          <h2>Or create a new one</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block scripts %}
+  <script>
+    const App = {
+      delimiters: ['[[', ']]'],
+      data() {
+        return {
+          tenders: null,
+          errored: false,
+
+          date: null,
+          market: null,
+          direction: null,
+          tender_round: null,
+          noMatch: true
+        }
+      },
+      methods: {
+        checkMatch() {
+          console.log('noMatch function')
+          for (tender of this.tenders) {
+            if (
+              tender.date == this.date &&
+              tender.market == this.market &&
+              tender.direction == this.direction &&
+              tender.tender_round == this.tender_round
+              ) {
+                this.noMatch =false
+                return
+              }
+          }
+          this.noMatch = true
+          return
+        },
+        buttonClicked() {
+          console.log('Clicked')
+          window.location.href = "http://127.0.0.1:8000/display";
+        }
+      },
+      mounted() {
+        axios.defaults.baseURL = 'http://127.0.0.1:8000/api';
+        axios
+          .get('/tenders')
+          .then(response => {this.tenders = response.data; console.log(response.data[0])})
+          .catch(error => {
+            console.log(error)
+            this.errored = true
+          })
+      }
+    };
+    Vue.createApp(App).mount('#tender-selector');
+    
+  </script>
+{% endblock scripts %}

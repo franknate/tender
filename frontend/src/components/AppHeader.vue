@@ -1,8 +1,8 @@
 <template>
-  <b-nav>
+  <b-navbar variant="dark">
     <b-nav-item disabled><b>Tender</b></b-nav-item>
     <b-nav-item disabled>Other Nav</b-nav-item>
-  </b-nav>
+  </b-navbar>
 </template>
 
 <script>
