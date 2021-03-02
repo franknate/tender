@@ -7,7 +7,7 @@
       <b-form-select v-model="tender_round" :options="rounds"></b-form-select>
       <b-icon @click="clearFilters" icon="arrow-repeat" class="mx-2" id="clear-icon"></b-icon>
     </b-form>
-    <b-list-group v-if="tenders">
+    <b-list-group>
       <b-list-group-item
         button
         v-for="tender in filteredTenders"
@@ -61,9 +61,6 @@ export default {
         this.addArrowIcons()
       })
     },
-    switchTender(tenderID) {
-      this.$store.commit("switchTender", tenderID)
-    },
     clearFilters() {
       this.date = null,
       this.market = null,
@@ -75,6 +72,9 @@ export default {
         tender.arrowIcon = tender.direction == "U" ? "caret-up-fill" : "caret-down-fill";
         tender.arrowColor = tender.direction == "U" ? "success" : "danger";
       }
+    },
+    switchTender(tenderId) {
+      this.$store.commit("switchTender", tenderId);
     }
   },
   computed: {
