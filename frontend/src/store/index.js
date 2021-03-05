@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from "vuex-persistedstate";
+import auth from './modules/auth';
 
 Vue.use(Vuex)
 
@@ -10,8 +12,11 @@ export default new Vuex.Store({
   },
   mutations: {
     switchTender(state, tenderId) {
-      fetch("http://127.0.0.1:8000/api/tenders/" + tenderId, {
-        method: "get"
+      fetch("http://127.0.0.1:8000/api/tenders/" + tenderId + "/", {
+        method: "get",
+        headers: {
+          "Authorization": "Token " + state.auth.token
+        }
       })
       .then((response) => {
         return response.json()
@@ -30,7 +35,9 @@ export default new Vuex.Store({
     }
   },
   modules: {
-  }
+    auth: auth
+  },
+  plugins: [createPersistedState()]
 })
 
 

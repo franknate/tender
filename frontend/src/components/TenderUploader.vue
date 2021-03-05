@@ -72,7 +72,10 @@ export default {
 
         fetch("http://127.0.0.1:8000/api/tenders/", {
           method: "POST",
-          body: formData
+          body: formData,
+          headers: {
+            "Authorization": "Token " + this.$store.getters.Token
+          }
         })
         .then(response => response.json())
         .then(result => {

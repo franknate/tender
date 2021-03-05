@@ -1,0 +1,60 @@
+import axios from 'axios';
+const state = {
+    username: null,
+    token: null
+};
+const getters = {
+  isAuthenticated: state => !!state.username,
+  UserName: state => state.username,
+  Token: state => state.token
+};
+const actions = {
+  LogIn({commit}, User) {
+    return  new Promise((resolve, reject) => {
+      fetch("http://127.0.0.1:8000/api/login/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(User)
+      })
+      .then(response => {
+        if(response.ok) {
+          return response.json()
+        } else {
+          throw new Error("Invalid credidentals")
+        }
+      })
+      .then(data => {
+        commit({
+          type: "login",
+          username: User.username,
+          token: data.token
+        })
+        resolve()
+      }, error => {
+        reject(error)
+      })      
+    })
+  },
+  LogOut({commit}){
+      let user = null
+      commit('logout', user)
+    }
+};
+const mutations = {
+  login(state, payload){
+    state.username = payload.username
+    state.token = payload.token
+  },
+  logout(state){
+    state.username = null
+    state.token = null
+  }
+};
+export default {
+  state,
+  getters,
+  actions,
+  mutations
+};
