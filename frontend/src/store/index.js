@@ -8,11 +8,12 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     currentTender: null,
-    currentRound: 1
+    currentRound: 1,
+    BASE_URL: process.env.VUE_APP_API_URL
   },
   mutations: {
     switchTender(state, tenderId) {
-      fetch("http://127.0.0.1:8000/api/tenders/" + tenderId + "/", {
+      fetch(state.BASE_URL + "tenders/" + tenderId + "/", {
         method: "get",
         headers: {
           "Authorization": "Token " + state.auth.token

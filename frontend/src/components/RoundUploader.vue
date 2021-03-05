@@ -41,7 +41,7 @@ export default {
         formData.append("tender_round", this.currentTender.tender_round);
         formData.append("bid_round", this.lastRound + 1);
 
-        fetch("http://127.0.0.1:8000/api/tenders/" + this.currentTender.id + "/", {
+        fetch(this.$store.BASE_URL + "tenders/" + this.currentTender.id + "/", {
           method: "PUT",
           body: formData,
           headers: {

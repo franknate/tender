@@ -9,9 +9,9 @@ const getters = {
   Token: state => state.token
 };
 const actions = {
-  LogIn({commit}, User) {
+  LogIn({commit, rootState}, User) {
     return  new Promise((resolve, reject) => {
-      fetch("http://127.0.0.1:8000/api/login/", {
+      fetch(rootState.BASE_URL + "login/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

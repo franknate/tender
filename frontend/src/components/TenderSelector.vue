@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     getTenders() {
-      fetch("http://127.0.0.1:8000/api/tenders/", {
+      fetch(this.$store.state.BASE_URL + "tenders/", {
         method: "get",
         headers: {
           "Authorization": "Token " + this.$store.getters.Token

@@ -70,7 +70,7 @@ export default {
         formData.append("tender_round", this.tender_round);
         formData.append("bid_round", "1");
 
-        fetch("http://127.0.0.1:8000/api/tenders/", {
+        fetch(this.$store.BASE_URL + "tenders/", {
           method: "POST",
           body: formData,
           headers: {
