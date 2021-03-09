@@ -3,27 +3,55 @@
     <b-button pill variant="outline-secondary" v-b-toggle.sidebar-right id="right-button">
         <b-icon icon="pen-fill"></b-icon>
     </b-button>
-    <b-sidebar id="sidebar-right" title="Right" right>
-      <div class="px-3 py-2">
-        <p>
-          Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
-          in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        </p>
+    <b-sidebar
+      id="sidebar-right"
+      width="550px"
+      bg-variant="dark"
+      text-variant="light"
+      right
+      no-header
+      shadow
+    >
+      <div class="px-4 py-3" id="bidTableWrapper">
+        <BidTable />
       </div>
+      <p class="h2">
+        <b-icon icon="arrow-bar-right" v-b-toggle.sidebar-right id="hide-icon"></b-icon>
+      </p>
     </b-sidebar>
   </div>
 </template>
 
 <script>
-export default {
+import BidTable from "./BidTable.vue"
 
+export default {
+  components: {
+    BidTable
+  }
 }
 </script>
 
-<style>
+<style scoped>
 #right-button {
   position: fixed;
   bottom: 50%;
   right: 1%;
+}
+
+#hide-icon {
+  color: grey;
+  font-weight: 300;
+  position: absolute;
+  bottom: 50%;
+}
+
+#hide-icon:hover {
+  color: lightgrey;
+  cursor: pointer;
+}
+
+#bidTableWrapper {
+  height: 98%;
 }
 </style>

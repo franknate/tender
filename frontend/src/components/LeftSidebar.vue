@@ -1,9 +1,18 @@
 <template>
   <div>
-    <b-button pill variant="outline-secondary" v-b-toggle.sidebar-left id="open-button">
+    <b-button
+      pill variant="outline-secondary"
+      v-b-toggle.sidebar-left
+      id="open-button"
+    >
       <b-icon icon="folder-fill"></b-icon>
     </b-button>
-    <b-sidebar id="sidebar-left" width="400px" no-header>
+    <b-sidebar
+      id="sidebar-left"
+      width="400px"
+      no-header
+      shadow
+    >
       <div class="px-4 py-3">
         <TabsBox />
       </div>
@@ -25,6 +34,12 @@ export default {
 </script>
 
 <style scoped>
+#sidebar-left {
+  position: absolute !important;
+  top: 60px !important;
+  background-color: aqua !important;
+}
+
 #open-button {
   position: fixed;
   bottom: 50%;

@@ -10,8 +10,8 @@
         class="row bg-light border mb-1"
       >
         <div class="d-flex justify-content-center col-3 col-md-2 align-items-center shadow-x">
-          {{ unit.fromdate | formatDate }} <br>
-          {{ unit.todate | formatDate }}
+          {{ formatDate(unit.fromdate) }} <br>
+          {{ formatDate(unit.todate) }}
         </div>
         <div class="col-3 px-md-5">
           <ul>
@@ -71,6 +71,9 @@ export default {
   methods: {
     filterBids(unit, shift) {
       return unit.bids.filter(bid => bid.bid_round == this.currentRound + shift);
+    },
+    formatDate(date) {
+      return new Date(date).toDateString().split(' ').slice(1).join(' ');
     }
   },
   computed: {
@@ -79,11 +82,6 @@ export default {
     },
     currentRound() {
       return this.$store.state.currentRound;
-    }
-  },
-  filters: {
-    formatDate(date) {
-      return new Date(date).toDateString().split(' ').slice(1).join(' ');
     }
   }
 }
