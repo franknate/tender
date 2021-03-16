@@ -69,12 +69,11 @@ export default {
       }      
     },
     lastRound() {
-      var bids = this.currentTender.units[0].bids;
-      return bids[bids.length-1].bid_round;
+      return this.$store.state.lastRound 
     }
   },
   created() {
-    this.$store.commit("switchTender", 8)
+    this.$store.commit("switchTender", 14)
   }
 }
 </script>

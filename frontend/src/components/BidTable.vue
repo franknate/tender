@@ -20,7 +20,7 @@
     </b-thead>
     <b-tbody>
       <b-tr
-        v-for="unit in currentTender.units"
+        v-for="(unit, index) in currentTender.units"
         :key="unit.id"
       >
         <b-th scope="row">
@@ -29,19 +29,19 @@
         </b-th>
         <b-td>
           <b-form-input
-            v-model="bids[unit.id]['5']"
+            v-model="bids[index]['5']"
             type="number"
           ></b-form-input>
         </b-td>
         <b-td>
           <b-form-input
-            v-model="bids[unit.id]['10']"
+            v-model="bids[index]['10']"
             type="number"
           ></b-form-input>
         </b-td>
         <b-td>
           <b-form-input
-            v-model="bids[unit.id]['15']"
+            v-model="bids[index]['15']"
             type="number"
           ></b-form-input>
         </b-td>
@@ -52,12 +52,35 @@
 
 <script>
 export default {
+  data() {
+    return {
+      makeBidError: null
+    }
+  },
   methods: {
     formatDate(date) {
       return new Date(date).toDateString().split(' ').slice(1).join(' ');
     },
     makeBid() {
-      console.log("Bids:", this.bids)
+      const Bid = {
+        tender_id: this.currentTender.id,
+        round: this.$store.state.lastRound,
+        bids: this.bids
+      }
+      this.currentTender.id
+      fetch(this.$store.state.BASE_URL + "bid/", {
+        method: "POST",
+        headers: {
+          "Authorization": "Token " + this.$store.getters.Token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(Bid)
+      })
+      .then(response => response.blob())
+      .then(blob => {
+        var file = window.URL.createObjectURL(blob);
+        window.location.assign(file);
+      })
     }
   },
   computed: {
@@ -69,11 +92,15 @@ export default {
     },
     bids() {
       let initialBids = {}
-      for (let unit of this.currentTender.units) {
-        initialBids[unit.id] = {
-          "5": 0,
-          "10": 0,
-          "15": 0
+      for (let i = 0; i < this.currentTender.units.length; i++) {
+        let day = new Date(this.currentTender.units[i].fromdate).getDay()
+        let isWeekend = (day === 6) || (day === 0);
+        let bid_round = this.currentTender.bid_rounds[this.$store.state.lastRound-1]
+        let max_price = isWeekend ? bid_round.max_price_wkdy : bid_round.max_price_wknd
+        initialBids[i] = {
+          "5": max_price,
+          "10": max_price,
+          "15": max_price
         }
       }
       return initialBids;

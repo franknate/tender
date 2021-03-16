@@ -2,38 +2,42 @@
   <b-navbar type="dark" variant="dark">
     <b-nav-item disabled>Greenergy <b>Tender</b></b-nav-item>
     <b-navbar-nav class="ml-auto">
-      <b-nav-item v-if="isLoggedIn" @click="logout" >Log Out</b-nav-item>
-      <b-nav-form v-else @submit.prevent="login">
-        <b-form-group class="mr-2">
-          <b-form-invalid-feedback :state="checkLogin">
-            Invalid username or password
-          </b-form-invalid-feedback>
-        </b-form-group>
-        <b-form-group>
-          <b-form-input
-            v-model="username"
-            size="sm"
-            class="mr-sm-2"
-            placeholder="usename">
-          </b-form-input>
-        </b-form-group>
-        <b-form-group>
-          <b-form-input
-            v-model="password"
-            type="password"
-            size="sm"
-            class="mr-sm-2"
-            placeholder="password">
-          </b-form-input>
-        </b-form-group>
-        <b-form-group>
-          <b-button
-            size="sm"
-            class="my-2 my-sm-0"
-            type="submit"
-          >Log In</b-button>
-        </b-form-group>
-      </b-nav-form>
+      <transition name="fade" mode="out-in">
+        <b-nav-item v-if="isLoggedIn" @click="logout" >Log Out</b-nav-item>
+        <div v-else>
+          <b-nav-form @submit.prevent="login">
+            <b-form-group class="mr-2">
+              <b-form-invalid-feedback :state="checkLogin">
+                Invalid username or password
+              </b-form-invalid-feedback>
+            </b-form-group>
+            <b-form-group>
+              <b-form-input
+                v-model="username"
+                size="sm"
+                class="mr-sm-2"
+                placeholder="usename">
+              </b-form-input>
+            </b-form-group>
+            <b-form-group>
+              <b-form-input
+                v-model="password"
+                type="password"
+                size="sm"
+                class="mr-sm-2"
+                placeholder="password">
+              </b-form-input>
+            </b-form-group>
+            <b-form-group>
+              <b-button
+                size="sm"
+                class="my-2 my-sm-0"
+                type="submit"
+              >Log In</b-button>
+            </b-form-group>
+          </b-nav-form>
+        </div>
+      </transition>
     </b-navbar-nav>
   </b-navbar>
 </template>

@@ -7,13 +7,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    tenders: [],
     currentTender: null,
     currentRound: 1,
+    lastRound: 1,
     BASE_URL: process.env.VUE_APP_API_URL
   },
   mutations: {
-    switchTender(state, tenderId) {
-      fetch(state.BASE_URL + "tenders/" + tenderId + "/", {
+    getTenders(state) {
+      fetch(state.BASE_URL + "tenders/", {
         method: "get",
         headers: {
           "Authorization": "Token " + state.auth.token
@@ -23,7 +25,30 @@ export default new Vuex.Store({
         return response.json()
       })
       .then((jsonData) => {
-        state.currentTender = jsonData
+        state.tenders = jsonData
+      })
+    },
+    switchTender(state, tenderId) {
+      fetch(state.BASE_URL + "tenders/" + tenderId + "/", {
+        method: "get",
+        headers: {
+          "Authorization": "Token " + state.auth.token
+        }
+      })
+      .then(response => response.json().then(data => ({status: response.status, body: data})))
+      .then(response => {
+        if (response.status == "200") {
+          state.currentTender = response.body
+
+          // Update lastRound variable
+          let bids = state.currentTender.units[0].bids
+          for (let bid_round of state.currentTender.bid_rounds) {
+            if (bid_round.id == bids[bids.length-1].bid_round) state.lastRound = bid_round.number
+          }
+
+        } else {
+          console.log("Error in switchTender", response)
+        }
       });
     },
     switchRound(state, round) {

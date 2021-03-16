@@ -35,13 +35,11 @@ export default {
     uploadForm() {
       if (this.checkFile) {
         const formData = new FormData();
-        formData.append("file", this.roundFile);
-        formData.append("market", this.currentTender.market);
-        formData.append("direction", this.currentTender.direction);
-        formData.append("tender_round", this.currentTender.tender_round);
+        formData.append("round_file", this.roundFile);
+        formData.append("tender_id", this.currentTender.id)
         formData.append("bid_round", this.lastRound + 1);
 
-        fetch(this.$store.BASE_URL + "tenders/" + this.currentTender.id + "/", {
+        fetch(this.$store.state.BASE_URL + "tenders/" + this.currentTender.id + "/", {
           method: "PUT",
           body: formData,
           headers: {

@@ -8,6 +8,7 @@ router = DefaultRouter()
 router.register('tenders', views.TenderViewSet)
 
 urlpatterns = [
-    path('login/', obtain_auth_token, name="login"),
+    path('login/', obtain_auth_token, name="login"), 
+    path('bid/', views.make_bid, name="bid"), 
     path('', include(router.urls)),
 ]

@@ -70,7 +70,12 @@ export default {
   },
   methods: {
     filterBids(unit, shift) {
-      return unit.bids.filter(bid => bid.bid_round == this.currentRound + shift);
+      let roundToFilter = this.currentRound + shift
+      if (roundToFilter < 1 || roundToFilter > 10 || roundToFilter > this.lastRound || !this.currentTender.bid_rounds) {
+        return null
+      } else {
+        return unit.bids.filter(bid => bid.bid_round == this.currentTender.bid_rounds[roundToFilter - 1].id);
+      }
     },
     formatDate(date) {
       return new Date(date).toDateString().split(' ').slice(1).join(' ');

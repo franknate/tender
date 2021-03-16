@@ -15,8 +15,7 @@
         @click="switchTender(tender.id)"
         class="text-monospace"
       >
-        Tender {{ tender.date }} {{ tender.market }}
-        <b-icon :icon="tender.arrowIcon" :variant="tender.arrowColor"></b-icon>{{ tender.tender_round }}
+        Tender {{ tender.date }} {{ tender.market }} {{ tender.direction }}-{{ tender.tender_round }}
       </b-list-group-item>
     </b-list-group>
   </div>
@@ -26,7 +25,6 @@
 export default {
   data() {
     return {
-      tenders: [],
       date: null,
       market: null,
       direction: null,
@@ -49,29 +47,14 @@ export default {
     };
   },
   methods: {
-    getTenders() {
-      fetch(this.$store.state.BASE_URL + "tenders/", {
-        method: "get",
-        headers: {
-          "Authorization": "Token " + this.$store.getters.Token
-        }
-      })
-      .then((response) => {
-        return response.json()
-      })
-      .then((jsonData) => {
-        this.tenders = jsonData
-        this.addArrowIcons()
-      })
-    },
     clearFilters() {
       this.date = null,
       this.market = null,
       this.direction = null,
       this.tender_round = null
     },
-    addArrowIcons() {
-      for (var tender of this.tenders) {
+    addArrowIcons(tenders) {
+      for (var tender of tenders) {
         tender.arrowIcon = tender.direction == "U" ? "caret-up-fill" : "caret-down-fill";
         tender.arrowColor = tender.direction == "U" ? "success" : "danger";
       }
@@ -81,6 +64,9 @@ export default {
     }
   },
   computed: {
+    tenders() {
+      return this.$store.state.tenders 
+    },
     filteredTenders() {
       return this.tenders.filter(tender =>
         (this.date == null || this.date == tender.date) &&
@@ -91,7 +77,7 @@ export default {
     }
   },
   created() {
-    this.getTenders();
+    this.$store.commit("getTenders");
   }
 };
 </script>
