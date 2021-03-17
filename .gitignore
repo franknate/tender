@@ -2,18 +2,21 @@
 *.log
 *.pot
 *.pyc
-__pycache__/
+tender/__pycache__
+api/__pycache__
+api/__migrations__
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
 media
 
 # Vue
-logs
-*.log
-npm-debug.log*
-.npm
-.eslintcache
-node_modules/
+frontend/logs
+frontend/*.log
+frontend/npm-debug.log*
+frontend/.npm
+frontend/.eslintcache
+frontend/node_modules
 
+# Others
 .env.development
