@@ -1,5 +1,6 @@
 <template>
   <b-table-simple
+    v-if="currentTender"
     sticky-header="100%"
     dark
     hover

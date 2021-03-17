@@ -63,7 +63,10 @@ export default new Vuex.Store({
   modules: {
     auth: auth
   },
-  plugins: [createPersistedState()]
+  plugins: [createPersistedState({
+    paths: ["auth"]
+  }
+  )]
 })
 
 
