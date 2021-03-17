@@ -2,13 +2,13 @@
 *.log
 *.pot
 *.pyc
-tender/__pycache__/
-api/__pycache__/
-api/__migrations__/
+tender/__pycache__
+api/__pycache__
+api/__migrations__
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
-media/
+media
 
 # Vue
 frontend/logs
