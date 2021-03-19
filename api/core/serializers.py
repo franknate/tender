@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Tender, Unit, BidRound, Bid, MARKET_CHOICES, DIRECTION_CHOICES
+from core.models import Tender, Unit, BidRound, Bid, MARKET_CHOICES, DIRECTION_CHOICES
 
 class BidSerializer(serializers.ModelSerializer):
     class Meta:

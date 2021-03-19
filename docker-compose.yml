@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  api:
+    build: ./api
+    volumes:
+      - ./api:/code
+    ports:
+      - "8000:8000"
+    command: ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+    
+  webapp:
+    build: ./frontend
+    environment:
+      - VUE_APP_IN_CONTAINER=true
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "8080:8080"
+    command: ["npm", "run", "serve"]
+    depends_on:
+      - api

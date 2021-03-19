@@ -11,7 +11,7 @@ export default new Vuex.Store({
     currentTender: null,
     currentRound: 1,
     lastRound: 1,
-    BASE_URL: process.env.VUE_APP_API_URL
+    BASE_URL: process.env.VUE_APP_IN_CONTAINER == true ? "http://api/" : "http://localhost:8000/api/"
   },
   mutations: {
     getTenders(state) {

@@ -111,7 +111,7 @@ def crate_bid_file(data):
             bid_table.at[i, '10 MW'] = bids[str(i)]['10']
             bid_table.at[i, '15 MW'] = bids[str(i)]['15']
         filepath = (
-            str(settings.MEDIA_ROOT)+'/temp/Bid_'
+            str(settings.MEDIA_ROOT)+'/Bid_'
             +str(tender.date)+"_"
             +str(tender.market)+"_"
             +str(tender.direction)+"-"

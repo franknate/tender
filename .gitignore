@@ -1,15 +1,15 @@
 # Django
-*.log
-*.pot
-*.pyc
-tender/__pycache__
-api/__pycache__
+api/*.log
+api/*.pot
+api/*.pyc
+api/api/__pycache__
+api/core/__pycache__
 
-api/migrations
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-media
+api/core/migrations
+api/local_settings.py
+api/db.sqlite3
+api/db.sqlite3-journal
+api/media
 
 # Vue
 frontend/logs
@@ -18,4 +18,4 @@ frontend/npm-debug.log*
 frontend/.npm
 frontend/.eslintcache
 frontend/node_modules
-frontend.env.development
+frontend/env.development

@@ -1,0 +1,9 @@
+logs
+*.log
+npm-debug.log*
+.npm
+.eslintcache
+node_modules
+.env.development
+
+Dockerfile
