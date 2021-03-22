@@ -17,7 +17,8 @@ DIRECTION_CHOICES = [
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return 'bidFiles/tender_{0}_{1}'.format(instance.date, filename)
+    date = str(instance.date).split(" ")[0]
+    return 'bids_{0}_{1}_{2}_{3}.xlsx'.format(date, instance.market, instance.direction, instance.tender_round)
 
 class Tender(models.Model):
     date = models.DateField()

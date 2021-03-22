@@ -99,7 +99,7 @@ def check_drops_file(drops):
         if drops.columns[i] != expected_columns[i]:
             raise Exception("Invalid column in drops file '" + drops.columns[i] + "', expected: '" + expected_columns[i] + "'")
 
-def crate_bid_file(data):
+def override_bid_file(data):
     try:
         tender = Tender.objects.get(pk=data['tender_id'])
         bid_table = pandas.read_excel(tender.bid_file, engine='openpyxl', sheet_name='PROPOSAL')
@@ -110,13 +110,8 @@ def crate_bid_file(data):
             bid_table.at[i, '5 MW'] = bids[str(i)]['5']
             bid_table.at[i, '10 MW'] = bids[str(i)]['10']
             bid_table.at[i, '15 MW'] = bids[str(i)]['15']
-        filepath = (
-            str(settings.MEDIA_ROOT)+'/Bid_'
-            +str(tender.date)+"_"
-            +str(tender.market)+"_"
-            +str(tender.direction)+"-"
-            +str(tender.tender_round)+"_"
-            +str(data['round'])+".xlsx")
+        date = str(tender.date).split(" ")[0]
+        filepath = '{0}/bids_{1}_{2}_{3}_{4}.xlsx'.format(settings.MEDIA_ROOT, date, tender.market, tender.direction, tender.tender_round) 
         with pandas.ExcelWriter(filepath) as writer:
             info_sheet.to_excel(writer, index=False, sheet_name='INFO')
             bid_table.to_excel(writer, index=False, sheet_name='PROPOSAL')

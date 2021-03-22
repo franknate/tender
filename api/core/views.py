@@ -1,6 +1,6 @@
 from .models import Tender, Unit
 from .serializers import TenderOnlySerializer, TenderSerializer
-from .functions import create_new_tender, update_tender, crate_bid_file
+from .functions import create_new_tender, update_tender, override_bid_file
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -38,7 +38,7 @@ class TenderViewSet(viewsets.ModelViewSet):
 @api_view(['POST'])
 def make_bid(request):
     try:
-        filepath = crate_bid_file(request.data)
+        filepath = override_bid_file(request.data)
         bid_file = open(filepath, 'rb')
         return HttpResponse(File(bid_file), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     except Exception as e:
