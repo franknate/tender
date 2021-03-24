@@ -4,7 +4,7 @@ from .functions import create_new_tender, update_tender, make_bid, initial_bids,
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.http import HttpResponse
+from django.http import FileResponse
 from django.core.files import File
 
 
@@ -47,7 +47,9 @@ class BidView(APIView):
         try:
             filepath = make_bid(request.data, tender_id)
             bid_file = open(filepath, 'rb')
-            return HttpResponse(File(bid_file), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            response = FileResponse(File(bid_file), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            response['Content-Disposition'] = 'attachment; filename="foo.xlsx"'
+            return response
         except Exception as e:
             printException()
             return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

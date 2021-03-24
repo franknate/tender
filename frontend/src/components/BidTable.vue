@@ -31,7 +31,7 @@
           </b-th>
           <b-td>
             <b-form-input
-              v-model="bids[index][5]"
+              v-model.number="bids[index][5]"
               :disabled="!bids[index][5]"
               :class="{ 'text-danger': isOut(index, 5) }"
               type="number"
@@ -39,7 +39,7 @@
           </b-td>
           <b-td>
             <b-form-input
-              v-model="bids[index][10]"
+              v-model.number="bids[index][10]"
               :disabled="!bids[index][10]"
               :class="{ 'text-danger': isOut(index, 10) }"
               type="number"
@@ -47,7 +47,7 @@
           </b-td>
           <b-td>
             <b-form-input
-              v-model="bids[index][15]"
+              v-model.number="bids[index][15]"
               :disabled="!bids[index][15]"
               :class="{ 'text-danger': isOut(index, 15) }"
               type="number"
@@ -106,7 +106,7 @@ export default {
         method: "POST",
         headers: {
           "Authorization": "Token " + this.$store.getters.Token,
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(this.bids)
       })
@@ -114,12 +114,21 @@ export default {
       .then(response => {
         if (response.ok) {
           this.showMakeBidError = false
-          var file = window.URL.createObjectURL(response.body);
-          window.location.assign(file);
+          this.downloadFile(response.body)
         } else {
           this.showMakeBidError = true
         }
       });
+    },
+    downloadFile(blob) {
+      var url = window.URL.createObjectURL(blob)
+      var a = document.createElement("a")
+      document.body.appendChild(a)
+      a.style = "display: none"
+      a.href=url
+      a.download = `${this.currentTender.datestr}_${this.currentTender.market}_${this.currentTender.direction}_${this.currentTender.tender_round}_${this.currentTender.current_bid_round}.xlsx`
+      a.click()
+      window.URL.revokeObjectURL(url)
     },
     isOut(index, amount) {
       return this.bids[index][amount] > this.initialBids[index][amount]

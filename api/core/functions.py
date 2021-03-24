@@ -196,21 +196,38 @@ def make_bid(bids, tender_id):
     try:
         tender = Tender.objects.get(pk=tender_id)
         create_our_bids(tender, bids)
-        bid_table = pandas.read_excel(tender.bid_file, engine='openpyxl', sheet_name='PROPOSAL')
-        info_sheet = pandas.read_excel(tender.bid_file, engine='openpyxl', sheet_name='INFO')
-        info_sheet.iloc[7, 1] = tender.current_bid_round
+        proposal_table = pandas.read_excel(tender.bid_file, engine='openpyxl', sheet_name='PROPOSAL', header=None)
+        info_table = pandas.read_excel(tender.bid_file, engine='openpyxl', sheet_name='INFO', header=None)
+        info_table.iloc[8, 1] = tender.current_bid_round
         for i, unit in enumerate(Unit.objects.filter(tender=tender)):
-            bid_table.at[i, '5 MW'] = bids[i]['5']
-            bid_table.at[i, '10 MW'] = bids[i]['10']
-            bid_table.at[i, '15 MW'] = bids[i]['15']
+            proposal_table.at[i+1, 3] = bids[i]['5']
+            proposal_table.at[i+1, 4] = bids[i]['10']
+            proposal_table.at[i+1, 5] = bids[i]['15']
         filepath = '{0}/bids_{1}_{2}_{3}_{4}.xlsx'.format(settings.MEDIA_ROOT, tender.datestr, tender.market, tender.direction, tender.tender_round) 
-        with pandas.ExcelWriter(filepath) as writer:
-            info_sheet.to_excel(writer, index=False, sheet_name='INFO')
-            bid_table.to_excel(writer, index=False, sheet_name='PROPOSAL')
+        with pandas.ExcelWriter(filepath, engine='xlsxwriter') as writer:
+            info_table.to_excel(writer, sheet_name='INFO', header=False, index=False)
+            proposal_table.to_excel(writer, sheet_name='PROPOSAL', header=False, index=False)
+            format_bid_file(writer, info_table, proposal_table)
         return filepath
     except:
         printException()
         raise
+
+
+def format_bid_file(writer, info_table, proposal_table):
+    workbook = writer.book
+    info_sheet = writer.sheets['INFO']
+    proposal_sheet = writer.sheets['PROPOSAL']
+    plain_text = workbook.add_format({'bold': False})
+    for i, width in enumerate(get_col_widths(info_table)):
+        info_sheet.set_column(i, i, width, plain_text)
+    for i, width in enumerate(get_col_widths(proposal_table)):
+        proposal_sheet.set_column(i, i, width, plain_text)
+    writer.save()
+
+
+def get_col_widths(dataframe):
+    return [max([len(str(cell).strip()) for cell in dataframe[col]]) + 1 for col in dataframe]
 
 
 def printException():
