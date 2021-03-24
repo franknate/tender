@@ -47,9 +47,7 @@ class BidView(APIView):
         try:
             filepath = make_bid(request.data, tender_id)
             bid_file = open(filepath, 'rb')
-            response = FileResponse(File(bid_file), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-            response['Content-Disposition'] = 'attachment; filename="foo.xlsx"'
-            return response
+            return FileResponse(File(bid_file), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         except Exception as e:
             printException()
             return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
