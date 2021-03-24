@@ -1,6 +1,5 @@
 <template>
     <div
-      v-if="currentTender"
       class="container rounded border-top border-bottom"
       id="bidRows"
     >
@@ -15,7 +14,7 @@
         </div>
         <div class="col-3 px-md-5">
           <ul>
-            <li v-for="bid in filterBids(unit, -1)" :key="bid.id">
+            <li v-for="bid in filterBids(unit, -1)" :key="bid.id" :class="{ 'text-success': bid.ours }">
               <span>
                 {{ bid.price }}
               </span>
@@ -27,7 +26,7 @@
         </div>
         <div class="col-3 px-md-5 shadow-x">
           <ul>
-            <li v-for="bid in filterBids(unit, 0)" :key="bid.id">
+            <li v-for="bid in filterBids(unit, 0)" :key="bid.id" :class="{ 'text-success': bid.ours }">
               <span>
                 {{ bid.price }}
               </span>
@@ -39,7 +38,7 @@
         </div>
         <div class="col-3 px-md-5">
           <ul>
-            <li v-for="bid in filterBids(unit, 1)" :key="bid.id">
+            <li v-for="bid in filterBids(unit, 1)" :key="bid.id" :class="{ 'text-success': bid.ours }">
               <span>
                 {{ bid.price }}
               </span>
@@ -49,8 +48,8 @@
             </li>
           </ul>
           <RoundUploader
-            v-if="currentRound == lastRound && index == 0"
-            :lastRound="lastRound"
+            v-if="currentRound < 11 && index == 0"
+            v-show="centerRound == currentRound - 1"
           />
         </div>
         <div class="col"></div>
@@ -66,15 +65,15 @@ export default {
     RoundUploader
   },
   props: {
-    lastRound: Number
+    centerRound: Number
   },
   methods: {
     filterBids(unit, shift) {
-      let roundToFilter = this.currentRound + shift
-      if (roundToFilter < 1 || roundToFilter > 10 || roundToFilter > this.lastRound || !this.currentTender.bid_rounds) {
+      let roundToFilter = this.centerRound + shift
+      if (roundToFilter < 1 || roundToFilter > 10 || roundToFilter > this.currentRound || !this.currentTender.bid_rounds) {
         return null
       } else {
-        return unit.bids.filter(bid => bid.bid_round == this.currentTender.bid_rounds[roundToFilter - 1].id);
+        return unit.bids.filter(bid => bid.bid_round == this.currentTender.bid_rounds[roundToFilter].id);
       }
     },
     formatDate(date) {
@@ -86,7 +85,7 @@ export default {
       return this.$store.state.currentTender;
     },
     currentRound() {
-      return this.$store.state.currentRound;
+      return this.currentTender.current_bid_round;
     }
   }
 }

@@ -1,34 +1,43 @@
 <template>
-  <b-form
-    id="upload-form"
-    @submit.stop.prevent="uploadForm"
-  >
-    <b-form-group>
-      <b-form-file
-        v-model="roundFile"
-        placeholder="Next round..."
-        drop-placeholder="Drop here..."
-        accept=".xlsx"
-        :state="checkFile"
-        required
-      >
-      </b-form-file>
-      <b-form-invalid-feedback :state="checkFile">
-        Must be an XLSX file
-      </b-form-invalid-feedback>
-    </b-form-group>
-    <b-button type="submit" variant="success">Upload</b-button>
-  </b-form>
+  <div>
+    <b-form
+      id="upload-form"
+      @submit.stop.prevent="uploadForm"
+    >
+      <b-form-group>
+        <b-form-file
+          v-model="roundFile"
+          placeholder="Next round..."
+          drop-placeholder="Drop here..."
+          accept=".xlsx"
+          :state="checkFile"
+          required
+        >
+        </b-form-file>
+        <b-form-invalid-feedback :state="checkFile">
+          Must be an XLSX file
+        </b-form-invalid-feedback>
+      </b-form-group>
+      <b-button type="submit" variant="success">Upload</b-button>
+    </b-form>
+    <b-alert
+      v-model="showUploadError"
+      class="mt-3"
+      variant="danger"
+      fade
+    >
+      <b>Upload Falied!</b> {{ uploadError }}
+    </b-alert>
+  </div>
 </template>
 
 <script>
 export default {
-  props: {
-    lastRound: Number
-  },
   data() {
     return {
-      roundFile: null
+      roundFile: null,
+      uploadError: null,
+      showUploadError: false,
     }
   },
   methods: {
@@ -37,7 +46,7 @@ export default {
         const formData = new FormData();
         formData.append("round_file", this.roundFile);
         formData.append("tender_id", this.currentTender.id)
-        formData.append("bid_round", this.lastRound + 1);
+        formData.append("bid_round", this.currentRound + 1);
 
         fetch(this.$store.state.BASE_URL + "tenders/" + this.currentTender.id + "/", {
           method: "PUT",
@@ -46,9 +55,16 @@ export default {
           "Authorization": "Token " + this.$store.getters.Token
           }
         })
-        .then(response => response.json())
-        .then(result => {
-          this.$store.dispatch("reloadTender")
+        .then(response => response.json().then(data => ({status: response.status, body: data})))
+        .then(response => {
+          if (response.status == "202") {
+            this.uploadError = null
+            this.showUploadError = false
+            this.$store.dispatch("reloadTender")
+          } else {
+            this.uploadError = response.body.message
+            this.showUploadError = true
+          }
         });
       }
     }
@@ -56,6 +72,9 @@ export default {
   computed: {
     currentTender() {
       return this.$store.state.currentTender;
+    },
+    currentRound() {
+      return this.currentTender.current_bid_round;
     },
     checkFile() {
       return this.roundFile == null ? null : this.roundFile["type"] == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"

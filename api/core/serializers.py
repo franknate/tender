@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from core.models import Tender, Unit, BidRound, Bid, MARKET_CHOICES, DIRECTION_CHOICES
+from .models import Tender, Unit, BidRound, Bid, MARKET_CHOICES, DIRECTION_CHOICES
+
 
 class BidSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,7 +11,7 @@ class BidSerializer(serializers.ModelSerializer):
 class BidRoundSerializer(serializers.ModelSerializer):
     class Meta:
         model = BidRound
-        fields = ['id', 'number', 'max_price_wkdy', 'max_price_wknd', 'tender']
+        fields = ['id', 'number']
 
 
 class UnitSerializer(serializers.ModelSerializer):
@@ -18,7 +19,7 @@ class UnitSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Unit
-        fields = ['id', 'fromdate', 'todate', 'tender', 'bids']
+        fields = ['id', 'fromdate', 'todate', 'bids']
 
 
 class TenderSerializer(serializers.ModelSerializer):
@@ -27,10 +28,10 @@ class TenderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tender
-        fields = ['id', 'date', 'market', 'direction', 'tender_round', 'bid_rounds', 'units']
+        fields = ['id', 'datestr', 'market', 'direction', 'tender_round', 'current_bid_round', 'bid_rounds', 'units']
 
 
 class TenderOnlySerializer(serializers.ModelSerializer):
     class Meta:
         model = Tender
-        fields = ['id', 'date', 'market', 'direction', 'tender_round']
+        fields = ['id', 'datestr', 'market', 'direction', 'tender_round']

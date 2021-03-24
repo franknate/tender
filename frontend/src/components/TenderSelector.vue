@@ -15,7 +15,7 @@
         @click="switchTender(tender.id)"
         class="text-monospace"
       >
-        Tender {{ tender.date }} {{ tender.market }} {{ tender.direction }}-{{ tender.tender_round }}
+        Tender {{ tender.datestr }} {{ tender.market }} {{ tender.direction }}-{{ tender.tender_round }}
       </b-list-group-item>
     </b-list-group>
   </div>

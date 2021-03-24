@@ -1,87 +1,128 @@
 <template>
-  <b-table-simple
-    v-if="currentTender"
-    sticky-header="100%"
-    dark
-    hover
-  >
-    <b-thead>
-      <b-tr class="text-center">
-        <b-th scope="col" style="width: 25%">
-          <b-button
-            type="submit"
-            variant="success"
-            @click="makeBid"
-          >Make Bid</b-button>
-        </b-th>
-        <b-th scope="col" style="width: 25%">5MW</b-th>
-        <b-th scope="col" style="width: 25%">10MW</b-th>
-        <b-th scope="col" style="width: 25%">15MW</b-th>
-      </b-tr>
-    </b-thead>
-    <b-tbody>
-      <b-tr
-        v-for="(unit, index) in currentTender.units"
-        :key="unit.id"
-      >
-        <b-th scope="row">
-          {{ formatDate(unit.fromdate) }} <br>
-          {{ formatDate(unit.todate) }}
-        </b-th>
-        <b-td>
-          <b-form-input
-            v-model="bids[index]['5']"
-            type="number"
-          ></b-form-input>
-        </b-td>
-        <b-td>
-          <b-form-input
-            v-model="bids[index]['10']"
-            type="number"
-          ></b-form-input>
-        </b-td>
-        <b-td>
-          <b-form-input
-            v-model="bids[index]['15']"
-            type="number"
-          ></b-form-input>
-        </b-td>
-      </b-tr>
-    </b-tbody>
-  </b-table-simple>
+  <div>
+    <b-table-simple
+      v-if="currentTender"
+      sticky-header="100%"
+      dark
+      hover
+    >
+      <b-thead>
+        <b-tr class="text-center">
+          <b-th scope="col" style="width: 25%">
+            <b-button
+              type="submit"
+              variant="success"
+              @click="makeBid"
+            >Make Bid</b-button>
+          </b-th>
+          <b-th scope="col" style="width: 25%">5MW</b-th>
+          <b-th scope="col" style="width: 25%">10MW</b-th>
+          <b-th scope="col" style="width: 25%">15MW</b-th>
+        </b-tr>
+      </b-thead>
+      <b-tbody v-if="bids">
+        <b-tr
+          v-for="(unit, index) in currentTender.units"
+          :key="unit.id"
+        >
+          <b-th scope="row">
+            {{ formatDate(unit.fromdate) }} <br>
+            {{ formatDate(unit.todate) }}
+          </b-th>
+          <b-td>
+            <b-form-input
+              v-model="bids[index][5]"
+              :disabled="!bids[index][5]"
+              :class="{ 'text-danger': isOut(index, 5) }"
+              type="number"
+            ></b-form-input>
+          </b-td>
+          <b-td>
+            <b-form-input
+              v-model="bids[index][10]"
+              :disabled="!bids[index][10]"
+              :class="{ 'text-danger': isOut(index, 10) }"
+              type="number"
+            ></b-form-input>
+          </b-td>
+          <b-td>
+            <b-form-input
+              v-model="bids[index][15]"
+              :disabled="!bids[index][15]"
+              :class="{ 'text-danger': isOut(index, 15) }"
+              type="number"
+            ></b-form-input>
+          </b-td>
+        </b-tr>
+      </b-tbody>
+    </b-table-simple>
+    <b-alert
+      v-model="showMakeBidError"
+      variant="danger"
+      fade
+    >
+      <b>Upload Falied!</b>
+    </b-alert>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      makeBidError: null
+      bids: null,
+      initialBids: null,
+      showMakeBidError: false
     }
   },
   methods: {
     formatDate(date) {
       return new Date(date).toDateString().split(' ').slice(1).join(' ');
     },
+    getBids() {
+      fetch(this.$store.state.BASE_URL + "bid/" + this.currentTender.id + "/", {
+        method: "GET",
+        headers: {
+          "Authorization": "Token " + this.$store.getters.Token,
+        }
+      })
+      .then(response => response.json().then(data => ({status: response.status, body: data})))
+      .then(response => {
+        if (response.status == "200") {
+          this.bids = response.body
+          this.initialBids = JSON.parse(JSON.stringify(response.body))
+        } else {
+          console.error("Error in BidTable.vue, getBids()")
+        }
+      });
+    },
     makeBid() {
-      const Bid = {
-        tender_id: this.currentTender.id,
-        round: this.$store.state.lastRound,
-        bids: this.bids
+      for (var i = 0; i < this.bids.length; i++) {
+        if (this.isOut(i, 5)) this.bids[i][5] = 0 
+        if (this.isOut(i, 10)) this.bids[i][10] = 0 
+        if (this.isOut(i, 15)) this.bids[i][15] = 0
       }
-      this.currentTender.id
-      fetch(this.$store.state.BASE_URL + "bid/", {
+      fetch(this.$store.state.BASE_URL + "bid/" + this.currentTender.id + "/", {
         method: "POST",
         headers: {
           "Authorization": "Token " + this.$store.getters.Token,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(Bid)
+        body: JSON.stringify(this.bids)
       })
-      .then(response => response.blob())
-      .then(blob => {
-        var file = window.URL.createObjectURL(blob);
-        window.location.assign(file);
-      })
+      .then(response => response.blob().then(data => ({ok: response.ok, body: data})))
+      .then(response => {
+        if (response.ok) {
+          this.showMakeBidError = false
+          var file = window.URL.createObjectURL(response.body);
+          window.location.assign(file);
+        } else {
+          this.showMakeBidError = true
+        }
+      });
+    },
+    isOut(index, amount) {
+      return this.bids[index][amount] > this.initialBids[index][amount]
     }
   },
   computed: {
@@ -89,22 +130,12 @@ export default {
       return this.$store.state.currentTender;
     },
     currentRound() {
-      return this.$store.state.currentRound;
-    },
-    bids() {
-      let initialBids = {}
-      for (let i = 0; i < this.currentTender.units.length; i++) {
-        let day = new Date(this.currentTender.units[i].fromdate).getDay()
-        let isWeekend = (day === 6) || (day === 0);
-        let bid_round = this.currentTender.bid_rounds[this.$store.state.lastRound-1]
-        let max_price = isWeekend ? bid_round.max_price_wkdy : bid_round.max_price_wknd
-        initialBids[i] = {
-          "5": max_price,
-          "10": max_price,
-          "15": max_price
-        }
-      }
-      return initialBids;
+      return this.currentTender.current_bid_round;
+    }
+  },
+  watch: {
+    currentTender(newRound, oldRound) {
+      this.getBids()
     }
   }
 }

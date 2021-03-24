@@ -6,14 +6,14 @@
     >
       <b-form-group>
         <b-form-file
-          v-model="tenderFile"
-          placeholder="First round file..."
-          drop-placeholder="First round file..."
+          v-model="bidFile"
+          placeholder="Bid file..."
+          drop-placeholder="Bid file..."
           accept=".xlsx"
-          :state="checkFile(tenderFile)"
+          :state="checkFile(bidFile)"
           required
         ></b-form-file>
-        <b-form-invalid-feedback :state="checkFile(tenderFile)">
+        <b-form-invalid-feedback :state="checkFile(bidFile)">
           Must be an XLSX file
         </b-form-invalid-feedback>
       </b-form-group>
@@ -27,19 +27,6 @@
           required
         ></b-form-file>
         <b-form-invalid-feedback :state="checkFile(dropsFile)">
-          Must be an XLSX file
-        </b-form-invalid-feedback>
-      </b-form-group>
-      <b-form-group>
-        <b-form-file
-          v-model="bidFile"
-          placeholder="Bid file..."
-          drop-placeholder="Bid file..."
-          accept=".xlsx"
-          :state="checkFile(bidFile)"
-          required
-        ></b-form-file>
-        <b-form-invalid-feedback :state="checkFile(bidFile)">
           Must be an XLSX file
         </b-form-invalid-feedback>
       </b-form-group>
@@ -78,7 +65,6 @@
 export default {
   data() {
     return {
-      tenderFile: null,
       dropsFile: null,
       bidFile: null,
       market: null,
@@ -109,7 +95,6 @@ export default {
       return file == null ? null : file["type"] == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     },
     clearForm() {
-      this.tenderFile = null,
       this.dropsFile = null,
       this.bidFile = null,
       this.market = null,
@@ -119,13 +104,11 @@ export default {
     uploadForm() {
       if (this.checkFile) {
         const formData = new FormData();
-        formData.append("first_round_file", this.tenderFile);
         formData.append("drops_file", this.dropsFile);
         formData.append("bid_file", this.bidFile);
         formData.append("market", this.market);
         formData.append("direction", this.direction);
         formData.append("tender_round", this.tender_round);
-        formData.append("bid_round", "1");
 
         fetch(this.$store.state.BASE_URL + "tenders/", {
           method: "POST",
