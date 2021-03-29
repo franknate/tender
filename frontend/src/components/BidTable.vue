@@ -32,7 +32,7 @@
           <b-td>
             <b-form-input
               v-model.number="bids[index][5]"
-              :disabled="!bids[index][5]"
+              :disabled="unit.stopped"
               :class="{ 'text-danger': isOut(index, 5) }"
               type="number"
             ></b-form-input>
@@ -40,7 +40,7 @@
           <b-td>
             <b-form-input
               v-model.number="bids[index][10]"
-              :disabled="!bids[index][10]"
+              :disabled="unit.stopped"
               :class="{ 'text-danger': isOut(index, 10) }"
               type="number"
             ></b-form-input>
@@ -48,7 +48,7 @@
           <b-td>
             <b-form-input
               v-model.number="bids[index][15]"
-              :disabled="!bids[index][15]"
+              :disabled="unit.stopped"
               :class="{ 'text-danger': isOut(index, 15) }"
               type="number"
             ></b-form-input>
@@ -97,11 +97,6 @@ export default {
       });
     },
     makeBid() {
-      for (var i = 0; i < this.bids.length; i++) {
-        if (this.isOut(i, 5)) this.bids[i][5] = 0 
-        if (this.isOut(i, 10)) this.bids[i][10] = 0 
-        if (this.isOut(i, 15)) this.bids[i][15] = 0
-      }
       fetch(this.$store.state.BASE_URL + "bid/" + this.currentTender.id + "/", {
         method: "POST",
         headers: {

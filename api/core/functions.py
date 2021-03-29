@@ -33,6 +33,7 @@ def update_tender(data):
         create_bids(tender, round_table, data['bid_round'])
         tender.current_bid_round += 1
         tender.save()
+        set_unit_stopped_on_update(tender)
     except:
         printException()
         raise
@@ -118,6 +119,19 @@ def create_bids(tender, round_table, bid_round):
         )
 
 
+def create_our_bids(tender, bids):
+    print("create_our_bids...")
+    for i, unit in enumerate(Unit.objects.filter(tender=tender)):
+        for amount in AMOUNTS:
+            our_bid, _ = OurBid.objects.update_or_create(
+                o_price = bids[i][str(amount)],
+                o_amount = amount,
+                o_bid_round = BidRound.objects.get(tender=tender, number=tender.current_bid_round),
+                o_unit = unit
+            )
+            set_unit_stopped(our_bid)
+
+
 def check_round_file(round_table):
     expected_columns = [
         'Időszak kezdete', 'Időszak vége', 'Termék típusa',
@@ -157,17 +171,37 @@ def check_bid_file(bid_table, info_sheet):
     # Check info sheet here
 
 
-def create_our_bids(tender, bids):
-    print("create_our_bids...")
-    for i, unit in enumerate(Unit.objects.filter(tender=tender)):
-        for amount in AMOUNTS:
-            if bids[i][str(amount)]:
-                our_bid, _ = OurBid.objects.update_or_create(
-                    o_price = bids[i][str(amount)],
-                    o_amount = amount,
-                    o_bid_round = BidRound.objects.get(tender=tender, number=tender.current_bid_round),
-                    o_unit = unit
-                )
+def set_unit_stopped(our_bid):
+    if our_bid.o_bid_round.number == 1:
+        isWeekday = our_bid.o_unit.fromdate.weekday() < 5
+        max_price = our_bid.o_bid_round.max_price_wkdy if isWeekday else our_bid.o_bid_round.max_price_wknd
+        if our_bid.o_price > max_price:
+            our_bid.o_unit.stopped = True
+            our_bid.o_unit.save()
+    else:
+        isWeekday = our_bid.o_unit.fromdate.weekday() < 5
+        min_drop = our_bid.o_bid_round.min_drop_wkdy if isWeekday else our_bid.o_bid_round.min_drop_wknd
+        prev_bid_round = BidRound.objects.get(tender=our_bid.o_unit.tender, number=our_bid.o_bid_round.number-1)
+        our_prev_bid = OurBid.objects.get(o_bid_round=prev_bid_round, o_unit=our_bid.o_unit, o_amount=our_bid.o_amount)
+        if our_prev_bid.o_price - our_bid.o_price < min_drop:
+            our_bid.o_unit.stopped = True
+            our_bid.o_unit.save() 
+
+
+def set_unit_stopped_on_update(tender):
+    prev_bid_round = BidRound.objects.get(tender=tender, number=tender.current_bid_round-1)
+    for unit in Unit.objects.filter(tender=tender):
+        if not OurBid.objects.filter(o_unit=unit, o_bid_round=prev_bid_round):
+            unit.stopped = True
+            unit.save()
+
+
+def our_last_bid(unit, amount):
+    try:
+        last_bid = OurBid.objects.filter(o_unit=unit, o_amount=amount)[0]
+        return last_bid.o_price
+    except:
+        return 0
 
 
 def initial_bids(tender_id):
@@ -175,19 +209,18 @@ def initial_bids(tender_id):
     bid_round = BidRound.objects.get(tender=tender, number=tender.current_bid_round)
     bid_table = []
     for unit in Unit.objects.filter(tender=tender_id):
-        isWeekday = unit.fromdate.weekday() < 5
-        drop = bid_round.min_drop_wkdy if isWeekday else bid_round.min_drop_wknd
         bid_row = {}
+        isWeekday = unit.fromdate.weekday() < 5
         for amount in AMOUNTS:
-            try:
-                our_last_bid = OurBid.objects.get(o_unit=unit, o_amount=amount, o_bid_round__number=bid_round.number-1)
-                price = our_last_bid.o_price - drop
-                out = False
-            except OurBid.DoesNotExist:
-                price = bid_round.max_price_wkdy if isWeekday else bid_round.max_price_wknd
-                out = tender.current_bid_round != 1
-            price = 0 if out else price
-            bid_row[amount] = price
+            if bid_round.number == 1:
+                bid_row[amount] = bid_round.max_price_wkdy if isWeekday else bid_round.max_price_wknd
+            else:
+                try:
+                    our_prev_bid = OurBid.objects.get(o_unit=unit, o_amount=amount, o_bid_round__number=bid_round.number-1)
+                    drop = bid_round.min_drop_wkdy if isWeekday else bid_round.min_drop_wknd
+                    bid_row[amount] = our_prev_bid.o_price if unit.stopped else our_prev_bid.o_price - drop
+                except OurBid.DoesNotExist:
+                    bid_row[amount] = our_last_bid(unit, amount)
         bid_table.append(bid_row)
     return bid_table
 

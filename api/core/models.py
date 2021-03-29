@@ -15,7 +15,6 @@ DIRECTION_CHOICES = [
 ]
 
 def user_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
     return 'bids_{0}_{1}_{2}_{3}.xlsx'.format(instance.datestr, instance.market, instance.direction, instance.tender_round)
 
 class Tender(models.Model):
@@ -35,6 +34,7 @@ class Tender(models.Model):
 class Unit(models.Model):
     fromdate = models.DateField()
     todate = models.DateField()
+    stopped = models.BooleanField(default=False)
     tender = models.ForeignKey(Tender, models.CASCADE, 'units')
 
     def __str__(self):
@@ -72,6 +72,9 @@ class OurBid(models.Model):
 
     def __str__(self):
         return "OurBid %d %d" % (self.o_price, self.o_amount)
+
+    class Meta:
+        ordering = ['-o_bid_round']
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):

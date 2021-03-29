@@ -19,7 +19,7 @@ class UnitSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Unit
-        fields = ['id', 'fromdate', 'todate', 'bids']
+        fields = ['id', 'fromdate', 'todate', 'stopped', 'bids']
 
 
 class TenderSerializer(serializers.ModelSerializer):
