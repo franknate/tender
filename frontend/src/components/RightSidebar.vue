@@ -13,7 +13,7 @@
       shadow
     >
       <div class="px-4 py-3" id="bidTableWrapper">
-        <BidTable />
+        <MakeBid />
       </div>
       <p class="h2">
         <b-icon icon="arrow-bar-right" v-b-toggle.sidebar-right id="hide-icon"></b-icon>
@@ -23,11 +23,11 @@
 </template>
 
 <script>
-import BidTable from "./BidTable.vue"
+import MakeBid from "./MakeBid.vue"
 
 export default {
   components: {
-    BidTable
+    MakeBid
   }
 }
 </script>
