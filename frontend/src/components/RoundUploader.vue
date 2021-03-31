@@ -46,7 +46,7 @@ export default {
         const formData = new FormData();
         formData.append("round_file", this.roundFile);
         formData.append("tender_id", this.currentTender.id)
-        formData.append("bid_round", this.currentRound + 1);
+        formData.append("bid_round", this.currentRound);
 
         fetch(this.$store.state.BASE_URL + "tenders/" + this.currentTender.id + "/", {
           method: "PUT",

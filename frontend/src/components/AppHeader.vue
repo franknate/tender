@@ -1,5 +1,5 @@
 <template>
-  <b-navbar type="dark" variant="dark">
+  <b-navbar type="dark" variant="dark" class="shadow-sm" sticky>
     <b-nav-item disabled>Greenergy <b>Tender</b></b-nav-item>
     <b-navbar-nav class="ml-auto">
       <transition name="fade" mode="out-in">
@@ -81,6 +81,5 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
 </style>

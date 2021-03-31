@@ -1,10 +1,10 @@
 <template>
-  <div id="app">
+  <div id="app" class="h-100">
     <AppHeader />
     <transition name="fade" mode="out-in">
-      <div v-if="this.$store.getters.isAuthenticated" id="main">
+      <div v-if="this.$store.getters.isAuthenticated" class="h-90">
         <CenterBox />
-        <LeftSidebar />    
+        <LeftSidebar />
         <RightSidebar />
       </div>
       <LoggedOut v-else />
@@ -31,6 +31,15 @@ export default {
 </script>
 
 <style>
+html, body {
+  height: 100%;
+}
+.h-90 {
+  height: 90%;
+}
+.h-95 {
+  height: 95%;
+}
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
 }
