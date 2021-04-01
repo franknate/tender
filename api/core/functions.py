@@ -114,7 +114,7 @@ def create_bids(tender, round_table, bid_round):
             price = round_table['price'][i],
             amount = round_table['amount'][i],
             ours = not pandas.isna(round_table['producer'][i]),
-            bid_round = BidRound.objects.get(number=bid_round),
+            bid_round = BidRound.objects.get(tender=tender, number=bid_round),
             unit = Unit.objects.get(tender=tender, fromdate = round_table['fromdate'][i])
         )
 

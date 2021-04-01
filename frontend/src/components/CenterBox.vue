@@ -7,7 +7,7 @@
       Tender {{ currentTender.datestr }} {{ currentTender.market }} {{ currentTender.direction }}-{{ currentTender.tender_round }}
     </h2>
     <div
-      v-if="currentRound > 1"
+
       class="d-flex flex-column flex-grow overflow-hidden"
     >
       <b-pagination
@@ -22,10 +22,7 @@
       ></b-pagination>
       <ResultTable :centerRound="centerRound" /> 
     </div>
-    <div v-else class="container">
-      <h4>No results yet.</h4>
-      <RoundUploader />
-    </div>
+
   </div>
 </template>
 
