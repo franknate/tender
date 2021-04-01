@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-table-simple
-      v-if="currentTender"
+      v-if="bids && initialBids"
       sticky-header="100%"
       dark
       hover
@@ -70,31 +70,12 @@
 export default {
   data() {
     return {
-      bids: null,
-      initialBids: null,
       showMakeBidError: false
     }
   },
   methods: {
     formatDate(date) {
       return new Date(date).toDateString().split(' ').slice(1).join(' ');
-    },
-    getBids() {
-      fetch(this.$store.state.BASE_URL + "bid/" + this.currentTender.id + "/", {
-        method: "GET",
-        headers: {
-          "Authorization": "Token " + this.$store.getters.Token,
-        }
-      })
-      .then(response => response.json().then(data => ({status: response.status, body: data})))
-      .then(response => {
-        if (response.status == "200") {
-          this.bids = response.body
-          this.initialBids = JSON.parse(JSON.stringify(response.body))
-        } else {
-          console.error("Error in BidTable.vue, getBids()")
-        }
-      });
     },
     makeBid() {
       fetch(this.$store.state.BASE_URL + "bid/" + this.currentTender.id + "/", {
@@ -131,15 +112,16 @@ export default {
   },
   computed: {
     currentTender() {
-      return this.$store.state.currentTender;
+      return this.$store.getters.CurrentTender;
     },
     currentRound() {
       return this.currentTender.current_bid_round;
-    }
-  },
-  watch: {
-    currentTender(newRound, oldRound) {
-      this.getBids()
+    },
+    bids() {
+      return this.$store.getters.Bids
+    },
+    initialBids() {
+      return this.$store.getters.InitialBids
     }
   }
 }

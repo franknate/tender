@@ -67,7 +67,7 @@ export default {
   },
   computed: {
     currentTender() {
-      return this.$store.state.currentTender;
+      return this.$store.getters.CurrentTender;
     },
     currentRound() {
       return this.currentTender.current_bid_round;
@@ -81,6 +81,12 @@ export default {
         inline: "end"
       })
     }
+  },
+  mounted() {
+    var firstCol = this.$el.querySelector(".column");
+    firstCol.scrollIntoView({
+      inline: "end"
+    })
   }
 }
 </script>

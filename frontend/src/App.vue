@@ -2,7 +2,7 @@
   <div id="app" class="h-100">
     <AppHeader />
     <transition name="fade" mode="out-in">
-      <div v-if="this.$store.getters.isAuthenticated" class="h-90">
+      <div v-if="this.$store.getters.IsAuthenticated" class="h-90">
         <CenterBox />
         <LeftSidebar />
         <RightSidebar />

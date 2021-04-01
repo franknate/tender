@@ -72,7 +72,7 @@ export default {
   },
   computed: {
     isLoggedIn() {
-      return this.$store.getters.isAuthenticated;
+      return this.$store.getters.IsAuthenticated;
     },
     checkLogin() {
       return this.validLogin

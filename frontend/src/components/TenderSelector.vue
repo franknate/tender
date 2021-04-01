@@ -53,19 +53,14 @@ export default {
       this.direction = null,
       this.tender_round = null
     },
-    addArrowIcons(tenders) {
-      for (var tender of tenders) {
-        tender.arrowIcon = tender.direction == "U" ? "caret-up-fill" : "caret-down-fill";
-        tender.arrowColor = tender.direction == "U" ? "success" : "danger";
-      }
-    },
     switchTender(tenderId) {
-      this.$store.commit("switchTender", tenderId);
+      this.$store.dispatch("switchTender", tenderId)
+      this.$store.dispatch("getBids", tenderId)
     }
   },
   computed: {
     tenders() {
-      return this.$store.state.tenders 
+      return this.$store.getters.Tenders 
     },
     filteredTenders() {
       return this.tenders.filter(tender =>
@@ -77,7 +72,7 @@ export default {
     }
   },
   created() {
-    this.$store.commit("getTenders");
+    this.$store.dispatch("getTenders");
   }
 };
 </script>

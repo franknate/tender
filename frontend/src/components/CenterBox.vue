@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     currentTender() {
-      return this.$store.state.currentTender;
+      return this.$store.getters.CurrentTender;
     },
     currentRound() {
       return this.currentTender.current_bid_round; 

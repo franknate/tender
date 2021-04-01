@@ -124,7 +124,7 @@ export default {
             this.showUploadError = false
             this.showUploadSuccess = true
             this.clearForm()
-            this.$store.commit("getTenders")
+            this.$store.dispatch("getTenders")
           } else {
             this.uploadError = response.body.message
             this.showUploadSuccess = false
