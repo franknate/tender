@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-grow container" id="table-wrapper">
+  <div class="flex-grow container rounded border hover" id="table-wrapper">
     <table class="table text-center">
       <thead>
         <tr>

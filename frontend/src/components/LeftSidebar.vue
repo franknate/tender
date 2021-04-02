@@ -13,22 +13,31 @@
       no-header
       shadow
     >
-      <div class="px-4 py-3">
-        <TabsBox />
+      <div class="px-4 py-3 overflow-auto">
+        <h4 class="my-3">Select a Tender</h4>
+        <TenderSelector />
       </div>
       <p class="h3">
         <b-icon icon="arrow-bar-left" v-b-toggle.sidebar-left id="hide-icon"></b-icon>
       </p>
+      <template #footer>
+        <div class="px-4 py-3 border-top">
+          <h4 class="my-3">Upload a Tender</h4>
+          <TenderUploader />
+        </div>
+      </template>
     </b-sidebar>
   </div>
 </template>
 
 <script>
-import TabsBox from "./TabsBox.vue"
+import TenderSelector from "./TenderSelector.vue";
+import TenderUploader from "./TenderUploader.vue";
 
 export default {
   components: {
-    TabsBox
+    TenderSelector,
+    TenderUploader
   }
 }
 </script>
