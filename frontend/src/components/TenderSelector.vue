@@ -14,7 +14,9 @@
         class="d-flex text-monospace p-0 bg-secondary"
       >
         <b-button class="p-2 flex-grow-1" @click="switchTender(tender.id)">
-          Tender {{ tender.datestr }} {{ tender.market }} {{ tender.direction }}-{{ tender.tender_round }}
+          Tender {{ tender.datestr }} {{ tender.market }}
+          <b-icon :icon="arrowIcon(tender.direction)" :variant="arrowVariant(tender.direction)">
+          </b-icon>{{ tender.tender_round }}
         </b-button>
         <b-button
           :id="'delete-' + tender.id"
@@ -88,6 +90,12 @@ export default {
     },
     onClose() {
       this.$root.$emit('bv::hide::popover')
+    },
+    arrowIcon(direction) {
+      return direction == "U" ? "caret-up-fill" : "caret-down-fill"
+    },
+    arrowVariant(direction) {
+      return direction == "U" ? "success" : "danger"
     }
   },
   computed: {

@@ -4,7 +4,8 @@
     class="d-flex flex-column h-100"
   >
     <h2 class="text-center mt-2">
-      Tender {{ currentTender.datestr }} {{ currentTender.market }} {{ currentTender.direction }}-{{ currentTender.tender_round }}
+      Tender {{ currentTender.datestr }} {{ currentTender.market }}
+      <b-icon :icon="arrowIcon(currentTender.direction)" :variant="arrowVariant(currentTender.direction)"></b-icon>{{ currentTender.tender_round }}
     </h2>
     <div class="d-flex flex-column flex-grow overflow-hidden">
       <b-pagination
@@ -36,6 +37,14 @@ export default {
   data() {
     return {
       centerRound: 1
+    }
+  },
+  methods: {
+    arrowIcon(direction) {
+      return direction == "U" ? "caret-up-fill" : "caret-down-fill"
+    },
+    arrowVariant(direction) {
+      return direction == "U" ? "success" : "danger"
     }
   },
   computed: {
