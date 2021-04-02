@@ -9,13 +9,40 @@
     </b-form>
     <b-list-group>
       <b-list-group-item
-        button
         v-for="tender in filteredTenders"
         :key="tender.id"
-        @click="switchTender(tender.id)"
-        class="text-monospace"
+        class="d-flex text-monospace p-0 bg-secondary"
       >
-        Tender {{ tender.datestr }} {{ tender.market }} {{ tender.direction }}-{{ tender.tender_round }}
+        <b-button class="p-2 flex-grow-1" @click="switchTender(tender.id)">
+          Tender {{ tender.datestr }} {{ tender.market }} {{ tender.direction }}-{{ tender.tender_round }}
+        </b-button>
+        <b-button
+          :id="'delete-' + tender.id"
+          class="p-2"
+        >
+          <b-icon icon="trash"></b-icon>
+        </b-button>
+        <b-popover
+          :target="'delete-' + tender.id"
+          triggers="click"
+          placement="top"
+        >
+          <template #title>Are you sure?</template>
+          <b-button
+            variant="danger"
+            @click="deleteTender(tender.id)"
+            class="m-1"
+          >
+            Delete
+          </b-button>
+          <b-button
+            variant="light"
+            @click="onClose"
+            class="m-1"
+          >
+            Cancel
+          </b-button>
+        </b-popover>
       </b-list-group-item>
     </b-list-group>
   </div>
@@ -55,6 +82,12 @@ export default {
     },
     switchTender(tenderId) {
       this.$store.dispatch("switchTender", tenderId)
+    },
+    deleteTender(tenderId) {
+      this.$store.dispatch("deleteTender", tenderId)
+    },
+    onClose() {
+      this.$root.$emit('bv::hide::popover')
     }
   },
   computed: {
@@ -77,19 +110,17 @@ export default {
 </script>
 
 <style scoped>
+
 .list-group {
   text-align: left;
   margin-top: 20px;
 }
-
 .list-group-item {
   margin-bottom: 2px;
 }
-
 #clear-icon {
   color: grey;
 }
-
 #clear-icon:hover {
   color: darkslategrey;
   cursor: pointer;

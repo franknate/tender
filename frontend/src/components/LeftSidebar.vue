@@ -13,7 +13,7 @@
       no-header
       shadow
     >
-      <div class="px-4 py-3 overflow-auto">
+      <div class="px-4 py-2 overflow-auto">
         <h4 class="my-3">Select a Tender</h4>
         <TenderSelector />
       </div>

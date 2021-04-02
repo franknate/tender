@@ -33,11 +33,7 @@ export default {
           Authorization: "Token " + rootState.auth.token,
         },
       })
-        .then((response) =>
-          response
-            .json()
-            .then((data) => ({ status: response.status, body: data }))
-        )
+        .then((response) => response.json().then((data) => ({ status: response.status, body: data })))
         .then((response) => {
           if (response.status == "200") {
             commit("setCurrentTender", response.body)
@@ -49,6 +45,21 @@ export default {
     },
     reloadTender({ state, dispatch }) {
       dispatch("switchTender", state.currentTender.id);
+    },
+    deleteTender({ commit, dispatch, rootState }, tenderId) {
+      fetch(rootState.BASE_URL + "tenders/" + tenderId + "/", {
+        method: "delete",
+        headers: {
+          Authorization: "Token " + rootState.auth.token,
+        },
+      })
+      .then((response) => {
+        if (response.ok) {
+          dispatch("getTenders")
+        } else {
+          console.log("Error in deleteTender", response)
+        }
+      });
     },
     getBids({ state, commit, rootState }, tenderId) {
       fetch(rootState.BASE_URL + "bid/" +tenderId + "/", {

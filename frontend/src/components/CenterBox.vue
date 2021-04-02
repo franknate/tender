@@ -6,10 +6,7 @@
     <h2 class="text-center mt-2">
       Tender {{ currentTender.datestr }} {{ currentTender.market }} {{ currentTender.direction }}-{{ currentTender.tender_round }}
     </h2>
-    <div
-
-      class="d-flex flex-column flex-grow overflow-hidden"
-    >
+    <div class="d-flex flex-column flex-grow overflow-hidden">
       <b-pagination
         v-model="centerRound"
         :total-rows="currentRound - 1"

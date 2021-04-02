@@ -41,14 +41,6 @@
     >
       <b>Upload Falied!</b> {{ uploadError }}
     </b-alert>
-    <b-alert
-      v-model="showUploadSuccess"
-      variant="success"
-      dismissible
-      fade
-    >
-      <b>Uploaded successfully!</b>
-    </b-alert>
   </div>
 </template>
 
@@ -59,8 +51,7 @@ export default {
       dropsFile: null,
       bidFile: null,
       uploadError: null,
-      showUploadError: false,
-      showUploadSuccess: false,
+      showUploadError: false
     };
   },
   methods: {
@@ -85,13 +76,11 @@ export default {
           if (response.status == "202") {
             this.uploadError = null
             this.showUploadError = false
-            this.showUploadSuccess = true
             this.dropsFile = null
             this.bidFile = null
             this.$store.dispatch("getTenders")
           } else {
             this.uploadError = response.body.message
-            this.showUploadSuccess = false
             this.showUploadError = true
           }
         });
