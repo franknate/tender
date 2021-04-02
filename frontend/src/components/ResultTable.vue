@@ -1,10 +1,10 @@
 <template>
   <div class="flex-grow container" id="table-wrapper">
     <table class="table text-center">
-      <thead class="thead-dark">
+      <thead>
         <tr>
-          <th class="sticky-header sticky-column" id="topLeft">Unit</th>
-          <th v-for="i in 10" :key="i" class="sticky-header column">
+          <th class="sticky-header sticky-column bg-white" id="topLeft">Unit</th>
+          <th v-for="i in 10" :key="i" class="sticky-header bg-white column">
             <span class="pr-4">Price</span>
             <span class="pl-4">Amount</span>
           </th>
@@ -76,6 +76,14 @@ export default {
   watch: {
     centerRound(newRound, oldRound) {
       var columns = this.$el.querySelectorAll(".column");
+      columns.forEach(el => {
+        el.classList.remove("bg-primary")
+        el.classList.add("bg-white")
+        el.style.color = "black";
+      })
+      columns[newRound-1].classList.remove("bg-white")
+      columns[newRound-1].classList.add("bg-primary")
+      columns[newRound-1].style.color = "white"
       columns[newRound].scrollIntoView({
         behavior: "smooth",
         inline: "end"
@@ -83,8 +91,16 @@ export default {
     }
   },
   mounted() {
-    var firstCol = this.$el.querySelector(".column");
-    firstCol.scrollIntoView({
+    var columns = this.$el.querySelectorAll(".column");
+    columns.forEach(el => {
+      el.classList.remove('bg-primary')
+      el.classList.add('bg-white')
+      el.style.color = "black";
+    })
+    columns[0].classList.remove('bg-white')
+    columns[0].classList.add('bg-primary')
+    columns[0].style.color = "white"
+    columns[0].scrollIntoView({
       inline: "end"
     })
   }
@@ -122,9 +138,8 @@ th {
   position: sticky;
   left: 0;
 }
-#uploader {
-  z-index: -100;
-  background: teal;
+.column {
+  transition: all .2s;
 }
 
 </style>
