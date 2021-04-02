@@ -46,7 +46,7 @@ export default {
     reloadTender({ state, dispatch }) {
       dispatch("switchTender", state.currentTender.id);
     },
-    deleteTender({ commit, dispatch, rootState }, tenderId) {
+    deleteTender({ state, commit, dispatch, rootState }, tenderId) {
       fetch(rootState.BASE_URL + "tenders/" + tenderId + "/", {
         method: "delete",
         headers: {
@@ -55,6 +55,10 @@ export default {
       })
       .then((response) => {
         if (response.ok) {
+          if (state.currentTender.id == tenderId) {
+            commit("setCurrentTender", null)
+            commit("setBids", null)
+          }
           dispatch("getTenders")
         } else {
           console.log("Error in deleteTender", response)
