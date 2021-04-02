@@ -7,7 +7,7 @@
       <b-form-select v-model="tender_round" :options="rounds"></b-form-select>
       <b-icon @click="clearFilters" icon="arrow-repeat" class="mx-2" id="clear-icon"></b-icon>
     </b-form>
-    <b-list-group>
+    <transition-group name="tender-list" tag="b-list-group">
       <b-list-group-item
         v-for="tender in filteredTenders"
         :key="tender.id"
@@ -46,7 +46,7 @@
           </b-button>
         </b-popover>
       </b-list-group-item>
-    </b-list-group>
+    </transition-group>
   </div>
 </template>
 
@@ -125,6 +125,7 @@ export default {
 }
 .list-group-item {
   margin-bottom: 2px;
+  transition: all .7s;
 }
 #clear-icon {
   color: grey;
@@ -132,6 +133,17 @@ export default {
 #clear-icon:hover {
   color: darkslategrey;
   cursor: pointer;
+}
+.tender-list-enter,
+.tender-list-leave-to {
+  max-height: 0px;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  overflow: hidden;
+}
+.tender-list-enter-to,
+.tender-list-leave {
+  max-height: 80px;
 }
 
 </style>
