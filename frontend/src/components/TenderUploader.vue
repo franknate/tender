@@ -31,15 +31,6 @@
         </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group>
-        <b-form-select v-model="market" :options="markets" required></b-form-select>
-      </b-form-group>
-      <b-form-group>
-        <b-form-select v-model="direction" :options="directions" required></b-form-select>
-      </b-form-group>
-      <b-form-group>
-        <b-form-select v-model="tender_round" :options="tender_rounds" required></b-form-select>
-      </b-form-group>
-      <b-form-group>
         <b-button type="submit" variant="success">Upload</b-button>
       </b-form-group>
     </b-form>
@@ -67,48 +58,20 @@ export default {
     return {
       dropsFile: null,
       bidFile: null,
-      market: null,
-      direction: null,
-      tender_round: null,
       uploadError: null,
       showUploadError: false,
       showUploadSuccess: false,
-      markets: [
-        { value: null, text: "Market" },
-        { value: "aFRR", text: "aFRR" },
-        { value: "mFRR", text: "mFRR" },
-      ],
-      directions: [
-        { value: null, text: "Direction" },
-        { value: "U", text: "Up" },
-        { value: "D", text: "Down" },
-      ],
-      tender_rounds: [
-        { value: null, text: "Tender round" },
-        { value: 1, text: "1" },
-        { value: 2, text: "2" },
-      ],
     };
   },
   methods: {
     checkFile(file) {
       return file == null ? null : file["type"] == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     },
-    clearForm() {
-      this.dropsFile = null,
-      this.bidFile = null,
-      this.market = null,
-      this.direction = null,
-      this.tender_round = null
-    },
     uploadForm() {
       if (this.checkFile) {
         const formData = new FormData();
         formData.append("drops_file", this.dropsFile);
         formData.append("bid_file", this.bidFile);
-        formData.append("market", this.market);
-        formData.append("direction", this.direction);
-        formData.append("tender_round", this.tender_round);
 
         fetch(this.$store.state.BASE_URL + "tenders/", {
           method: "POST",
@@ -123,7 +86,8 @@ export default {
             this.uploadError = null
             this.showUploadError = false
             this.showUploadSuccess = true
-            this.clearForm()
+            this.dropsFile = null
+            this.bidFile = null
             this.$store.dispatch("getTenders")
           } else {
             this.uploadError = response.body.message

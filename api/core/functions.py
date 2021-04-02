@@ -10,12 +10,12 @@ AMOUNTS = [5, 10, 15]
 def create_new_tender(data):
     try:
         drops = preprocess_drops_file(data['drops_file'])
-        dates, datestr = preprocess_bid_file(data['bid_file'])
+        dates, datestr, market, direction, tender_round = preprocess_bid_file(data['bid_file'])
         tender, _ = Tender.objects.update_or_create(
             datestr = datestr,
-            market = data['market'],
-            direction = data['direction'],
-            tender_round = data['tender_round'],
+            market = market,
+            direction = direction,
+            tender_round = tender_round,
             current_bid_round = 1,
             bid_file = data['bid_file']     # Bid file validation is not implemented!
         )
@@ -77,11 +77,21 @@ def preprocess_bid_file(bid_file):
             fromdate = pandas.to_datetime(stupid_date[0])
             todate = fromdate.replace(day=int(stupid_date[1]))
             dates.append({'from': fromdate, 'to': todate})
-        datestr = info_sheet.iloc[0, 1]
-        return dates, datestr
+        datestr, market, direction, tender_round = tender_info(info_sheet)
+        return dates, datestr, market, direction, tender_round
     except:
         printException()
         raise
+
+
+def tender_info(info_sheet):
+    datestr = info_sheet.iloc[0, 1]
+    market = str(info_sheet.iloc[1, 1]).split("_")[0]
+    market = 'aFRR' if market == 'AFRR' else 'mFRR'
+    direction = str(info_sheet.iloc[1, 1]).split("_")[1]
+    direction = 'U' if direction == 'POSITIVE' else 'D'
+    tender_round = info_sheet.iloc[2, 1]
+    return datestr, market, direction, tender_round
 
 
 def create_bid_rounds(tender, drops):

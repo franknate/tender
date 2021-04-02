@@ -55,7 +55,6 @@ export default {
     },
     switchTender(tenderId) {
       this.$store.dispatch("switchTender", tenderId)
-      this.$store.dispatch("getBids", tenderId)
     }
   },
   computed: {

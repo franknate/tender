@@ -26,7 +26,7 @@ export default {
           commit("setTenders", data)
         });
     },
-    switchTender({ commit, rootState}, tenderId) {
+    switchTender({ commit, dispatch, rootState}, tenderId) {
       fetch(rootState.BASE_URL + "tenders/" + tenderId + "/", {
         method: "get",
         headers: {
@@ -41,6 +41,7 @@ export default {
         .then((response) => {
           if (response.status == "200") {
             commit("setCurrentTender", response.body)
+            dispatch("getBids", tenderId)
           } else {
             console.log("Error in switchTender", response);
           }
