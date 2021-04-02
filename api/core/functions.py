@@ -21,6 +21,7 @@ def create_new_tender(data):
         )
         create_bid_rounds(tender, drops)
         create_units(tender, dates)
+        return tender.id
     except:
         printException()
         raise

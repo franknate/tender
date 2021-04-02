@@ -28,8 +28,6 @@ class Tender(models.Model):
     def __str__(self):
         return 'Tender %s %s-%s-%d' % (self.datestr, self.market, self.direction, self.tender_round)
 
-    class Meta:
-        ordering = ['-datestr']
 
 class Unit(models.Model):
     fromdate = models.DateField()

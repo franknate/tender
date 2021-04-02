@@ -55,7 +55,7 @@ export default {
       })
       .then((response) => {
         if (response.ok) {
-          if (state.currentTender.id == tenderId) {
+          if (state.currentTender && state.currentTender.id == tenderId) {
             commit("setCurrentTender", null)
             commit("setBids", null)
           }
@@ -65,7 +65,7 @@ export default {
         }
       });
     },
-    getBids({ state, commit, rootState }, tenderId) {
+    getBids({ commit, rootState }, tenderId) {
       fetch(rootState.BASE_URL + "bid/" +tenderId + "/", {
         method: "GET",
         headers: {

@@ -79,6 +79,7 @@ export default {
             this.dropsFile = null
             this.bidFile = null
             this.$store.dispatch("getTenders")
+            this.$store.dispatch("switchTender", response.body.id)
           } else {
             this.uploadError = response.body.message
             this.showUploadError = true

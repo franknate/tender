@@ -20,8 +20,8 @@ class TenderViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
-            create_new_tender(request.data)
-            return Response({"message": "Uploaded succesfully"}, status=status.HTTP_202_ACCEPTED)
+            tender_id = create_new_tender(request.data)
+            return Response({"message": "Uploaded succesfully", "id": tender_id}, status=status.HTTP_202_ACCEPTED)
         except Exception as e:
             printException()
             return Response({"message": str(e)}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
