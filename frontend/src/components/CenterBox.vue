@@ -3,10 +3,10 @@
     v-if="currentTender"
     class="d-flex flex-column h-100"
   >
-    <h2 class="text-center mt-2">
+    <h3 class="text-center mt-2">
       Tender {{ currentTender.datestr }} {{ currentTender.market }}
       <b-icon :icon="arrowIcon(currentTender.direction)" :variant="arrowVariant(currentTender.direction)"></b-icon>{{ currentTender.tender_round }}
-    </h2>
+    </h3>
     <div class="d-flex flex-column flex-grow overflow-hidden">
       <b-pagination
         v-model="centerRound"
@@ -16,7 +16,7 @@
         first-number
         last-number
         align="center"
-        class="my-3"
+        class="my-2"
       ></b-pagination>
       <ResultTable :centerRound="centerRound" /> 
     </div>
