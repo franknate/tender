@@ -27,12 +27,10 @@
 
 <script>
 import ResultTable from "./ResultTable.vue"
-import RoundUploader from "./RoundUploader.vue"
 
 export default {
   components: {
-    ResultTable,
-    RoundUploader
+    ResultTable
   },
   data() {
     return {
