@@ -39,7 +39,7 @@
           </b-button>
           <b-button
             variant="light"
-            @click="onClose"
+            @click="onDeleteClose"
             class="m-1"
           >
             Cancel
@@ -88,7 +88,7 @@ export default {
     deleteTender(tenderId) {
       this.$store.dispatch("deleteTender", tenderId)
     },
-    onClose() {
+    onDeleteClose() {
       this.$root.$emit('bv::hide::popover')
     },
     arrowIcon(direction) {
