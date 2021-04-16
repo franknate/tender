@@ -1,7 +1,13 @@
 <template>
   <div>
     <b-form inline>
-      <b-form-datepicker v-model="date"></b-form-datepicker>
+      <b-form-input
+        v-model.number="year"
+        type="number"
+        class="w-50"
+        placeholder="Year">
+      </b-form-input>
+      <b-form-select v-model="month" :options="months"></b-form-select>
       <b-form-select v-model="market" :options="markets"></b-form-select>
       <b-form-select v-model="direction" :options="directions"></b-form-select>
       <b-form-select v-model="tender_round" :options="rounds"></b-form-select>
@@ -54,10 +60,26 @@
 export default {
   data() {
     return {
-      date: null,
+      year: null,
+      month: null,
       market: null,
       direction: null,
       tender_round: null,
+      months: [
+        { value: null, text: "Month" },
+        { value: "1", text: "1 - January" },
+        { value: "2", text: "2 - February" },
+        { value: "3", text: "3 - March" },
+        { value: "4", text: "4 - April" },
+        { value: "5", text: "5 - May" },
+        { value: "6", text: "6 - June" },
+        { value: "7", text: "7 - July" },
+        { value: "8", text: "8 - August" },
+        { value: "9", text: "9 - September" },
+        { value: "10", text: "10 - October" },
+        { value: "11", text: "11 - November" },
+        { value: "12", text: "12 - December" }
+      ],
       markets: [
         { value: null, text: "Market" },
         { value: "aFRR", text: "aFRR" },
@@ -77,7 +99,8 @@ export default {
   },
   methods: {
     clearFilters() {
-      this.date = null,
+      this.year = null,
+      this.month = null,
       this.market = null,
       this.direction = null,
       this.tender_round = null
@@ -104,12 +127,14 @@ export default {
     },
     filteredTenders() {
       return this.tenders.filter(tender =>
-        (this.date == null || this.date == tender.date) &&
-        (this.market == null || this.market == tender.market) &&
-        (this.direction == null || this.direction == tender.direction) &&
-        (this.tender_round == null || this.tender_round == tender.tender_round)
+        (!this.year || this.year == tender.datestr.slice(0, 4)) &&
+        (!this.month || this.month == tender.datestr.slice(5)) &&
+        (!this.market || this.market == tender.market) &&
+        (!this.direction || this.direction == tender.direction) &&
+        (!this.tender_round || this.tender_round == tender.tender_round)
       ).slice(0,8)
     }
+
   },
   created() {
     this.$store.dispatch("getTenders");
