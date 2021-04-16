@@ -2,7 +2,7 @@
   <b-jumbotron bg-variant="info" text-variant="white" border-variant="dark">
     <template #header>Greenergy Tender</template>
     <template #lead>
-      A simple web application for the tenders.
+      A simple web application for the traders.
     </template>
     <hr class="my-4">
     <p>
