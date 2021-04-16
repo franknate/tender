@@ -17,7 +17,7 @@
             {{ formatDate(unit.todate) }}
           </th>
           <td v-for="i in 10" :key="i">
-            <p v-for="bid in filterBids(unit, i)" :key="bid.id" class="m-0">
+            <p v-for="bid in filterBids(unit, i)" :key="bid.id" :class="[{ 'text-success': bid.ours }, 'm-0']">
               <span class="pr-4">{{ bid.price }}</span>
               <span class="pr-4">{{ bid.amount }}</span>
             </p>
