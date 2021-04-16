@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="this.$store.getters.CurrentTender">
     <b-button pill variant="outline-secondary" v-b-toggle.sidebar-right id="right-button">
         <b-icon icon="pen-fill"></b-icon>
     </b-button>
