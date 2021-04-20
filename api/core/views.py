@@ -1,6 +1,6 @@
 from .models import Tender, Unit
 from .serializers import TenderOnlySerializer, TenderSerializer
-from .functions import create_new_tender, update_tender, make_bid, initial_bids, printException
+from .functions import create_new_tender, update_tender, make_bid, initial_bids, print_exception
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -23,7 +23,7 @@ class TenderViewSet(viewsets.ModelViewSet):
             tender_id = create_new_tender(request.data)
             return Response({"message": "Uploaded succesfully", "id": tender_id}, status=status.HTTP_202_ACCEPTED)
         except Exception as e:
-            printException()
+            print_exception()
             return Response({"message": str(e)}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
             
     def update(self, request, *args, **kwargs):
@@ -31,7 +31,7 @@ class TenderViewSet(viewsets.ModelViewSet):
             update_tender(request.data)
             return Response({"message": "Uploaded succesfully"}, status=status.HTTP_202_ACCEPTED)
         except Exception as e:
-            printException()
+            print_exception()
             return Response({"message": str(e)}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 
@@ -40,7 +40,7 @@ class BidView(APIView):
         try:
             return Response(initial_bids(tender_id))
         except Exception as e:
-            printException()
+            print_exception()
             return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def post(self, request, tender_id, format=None):
@@ -49,5 +49,5 @@ class BidView(APIView):
             bid_file = open(filepath, 'rb')
             return FileResponse(File(bid_file), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         except Exception as e:
-            printException()
+            print_exception()
             return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

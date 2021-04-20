@@ -23,7 +23,7 @@ def create_new_tender(data):
         create_units(tender, dates)
         return tender.id
     except:
-        printException()
+        print_exception()
         raise
 
 
@@ -36,7 +36,7 @@ def update_tender(data):
         tender.save()
         set_unit_stopped_on_update(tender)
     except:
-        printException()
+        print_exception()
         raise
 
 
@@ -50,7 +50,7 @@ def preprocess_round_file(round_file):
         round_table['todate'] = pandas.to_datetime(round_table['todate'])
         return round_table
     except:
-        printException()
+        print_exception()
         raise
 
 
@@ -62,7 +62,7 @@ def preprocess_drops_file(drops_file):
         drops.columns = ['round', 'max1', 'drop1', 'max2', 'drop2']
         return drops
     except:
-        printException()
+        print_exception()
         raise
 
 
@@ -81,7 +81,7 @@ def preprocess_bid_file(bid_file):
         datestr, market, direction, tender_round = tender_info(info_sheet)
         return dates, datestr, market, direction, tender_round
     except:
-        printException()
+        print_exception()
         raise
 
 
@@ -254,7 +254,7 @@ def make_bid(bids, tender_id):
             format_bid_file(writer, info_table, proposal_table)
         return filepath
     except:
-        printException()
+        print_exception()
         raise
 
 
@@ -274,7 +274,7 @@ def get_col_widths(dataframe):
     return [max([len(str(cell).strip()) for cell in dataframe[col]]) + 1 for col in dataframe]
 
 
-def printException():
+def print_exception():
     exc_type, exc_obj, exc_tb = sys.exc_info()
     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
     print("Exception in {0} at line {1}: {2}".format(fname, exc_tb.tb_lineno,  exc_obj))
