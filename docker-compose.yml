@@ -16,3 +16,8 @@ services:
     command: ["npm", "run", "serve"]
     depends_on:
       - api
+      
+  test_api:
+    build: ./api
+    command: ["python3", "manage.py", "test", "core"]
+    profiles: ["test"]
