@@ -41,8 +41,8 @@ class TenderViewSetTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
 
     def post_tender(self):
-        bid_file = open("../docs/bid_file.xlsx", "rb")
-        drops_file = open("../docs/drops.xlsx", "rb")
+        bid_file = open("docs/bid_file.xlsx", "rb")
+        drops_file = open("docs/drops.xlsx", "rb")
         data = {"bid_file": bid_file, "drops_file": drops_file}
         return self.client.post("/api/tenders/", data)
 
@@ -85,7 +85,7 @@ class TenderViewSetTestCase(APITestCase):
 
     def test_update_tender_valid(self):
         tender_id = self.post_tender().data["id"]
-        round_file = open("../docs/result_round1.xlsx", "rb")
+        round_file = open("docs/result_round1.xlsx", "rb")
         data = {"round_file": round_file, "tender_id": tender_id, "bid_round": 1}
         response = self.client.put("/api/tenders/{}/".format(tender_id), data)
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
@@ -124,8 +124,8 @@ class BidViewTestCase(APITestCase):
         self.token, _ = Token.objects.get_or_create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
 
-        bid_file = open("../docs/bid_file.xlsx", "rb")
-        drops_file = open("../docs/drops.xlsx", "rb")
+        bid_file = open("docs/bid_file.xlsx", "rb")
+        drops_file = open("docs/drops.xlsx", "rb")
         data = {"bid_file": bid_file, "drops_file": drops_file}
         self.tender_id = self.client.post("/api/tenders/", data).data["id"]
 
